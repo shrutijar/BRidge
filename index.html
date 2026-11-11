@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRidge</title>
+<meta name="description" content="BRidge is a practice app for PARS behavioral interviews, case interviews and business vocabulary.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#B3121A; --red-d:#8E0E14; --red-t:#FBEAEA; --red-line:#F0D4D4;
+  --ink:#1E1A1D; --ink2:#342A32; --mute:#6B6168; --line:#E6E2E7; --line2:#D4CDD3;
+  --bg:#F6F5F7; --card:#FFFFFF;
+  --blue:#4A80F5; --purple:#B08FF5; --orange:#F4B96A;
+  --green-bg:#E3F2E7; --green:#1D5A31; --amber-bg:#FBEBD3; --amber:#7A4A0B; --violet-bg:#F1ECF7; --violet:#4B3A74; --hard-bg:#F8DCDC;
+  --head:'Chakra Petch',system-ui,sans-serif; --body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body);font-size:15px;line-height:1.5;color:var(--ink);background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #CF8B36;outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:8px;top:-60px;background:#fff;padding:10px 14px;border-radius:8px;z-index:100;font-weight:700}
+.skip:focus{top:8px}
+
+/* shell */
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;overflow:auto;background:var(--card);border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:4px}
+.logo{display:flex;align-items:flex-end;gap:5px;font-family:var(--head);font-weight:700;font-size:36px;letter-spacing:-.02em;color:var(--red);padding:0 12px 20px;line-height:1}
+.logo i{width:12px;height:12px;border-radius:50%;background:#111;margin-bottom:6px}
+.nav{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 12px;border-radius:8px;font-family:var(--head);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.nav:hover{background:var(--bg)}
+.nav.on{background:var(--red-t)}
+.nav svg{transition:transform .2s}
+.nav.on svg{transform:rotate(180deg)}
+.sub{display:flex;flex-direction:column;gap:2px;margin:0 0 8px 20px;padding-left:8px;border-left:2px solid var(--red-line)}
+.sub a{padding:8px 10px;border-radius:6px;font-size:14px;color:#5E555C}
+.sub a:hover{background:var(--bg)}
+.sub a.on{color:var(--red);font-weight:700;background:var(--red-t)}
+.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:14px 12px 0;border-top:1px solid var(--line)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.name-in{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:3px 6px;margin-left:-6px;font-weight:700;font-size:14px}
+.name-in:hover,.name-in:focus{border-color:var(--line2);background:#fff}
+.small{font-size:13px}
+.mute{color:var(--mute)}
+.main{padding:32px 40px 48px;display:flex;flex-direction:column;gap:24px;min-width:0;outline:none}
+.foot{font-size:12px;color:var(--mute);padding-top:8px}
+
+/* type */
+h1{margin:0;font-family:var(--head);font-weight:700;font-size:38px;line-height:1.1;letter-spacing:.01em;text-transform:uppercase;color:var(--red);text-wrap:balance}
+h2{margin:0;font-family:var(--head);font-weight:600;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+h3{margin:0;font-size:16px}
+.lede{margin:6px 0 0;color:var(--mute);max-width:62ch}
+.pagehead{display:flex;flex-direction:column}
+
+/* parts */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.row>*{min-width:0}
+.btn{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line2);background:#fff;font-weight:700;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{border-color:var(--red)}
+.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+.btn.pri:hover{background:var(--red-d)}
+.btn.light{background:#fff;color:var(--red);border-color:#fff}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.55);color:#fff}
+.btn.sm{min-height:36px;padding:0 12px;font-size:14px}
+.btn[aria-pressed="true"]{background:var(--red-t);border-color:var(--red);color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+label,.lab{display:block;font-size:13px;font-weight:700;margin:0 0 6px}
+input[type=text],input[type=number],input[type=search],input[type=date],select,textarea{width:100%;border:1px solid var(--line2);border-radius:8px;padding:10px 12px;background:#fff}
+textarea{min-height:110px;resize:vertical}
+select{min-height:44px}
+input[type=text],input[type=number],input[type=search],input[type=date]{min-height:44px}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;background:var(--violet-bg);color:var(--violet);white-space:nowrap}
+.pill.easy,.pill.ready{background:var(--green-bg);color:var(--green)}
+.pill.medium,.pill.practice{background:var(--amber-bg);color:var(--amber)}
+.pill.hard{background:var(--hard-bg);color:var(--red-d)}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;display:inline-flex;align-items:center;padding:0 16px;border-radius:20px;border:1px solid var(--line2);background:#fff;font-weight:700;font-size:14px;cursor:pointer}
+.chip:hover{border-color:var(--red)}
+.chip.on,.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.bar{height:8px;border-radius:8px;background:#EEEAEF;overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--red);border-radius:8px;transition:width .5s ease}
+.bar.blue>span{background:var(--blue)}
+.meter{display:inline-flex;gap:3px;vertical-align:middle}
+.meter b{width:8px;height:8px;border-radius:50%;background:#E0D9E1}
+.meter b.f{background:currentColor}
+.back{font-weight:700;color:var(--red);display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.empty{padding:32px;text-align:center;color:var(--mute);border:1px dashed var(--line2);border-radius:12px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:680px}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-align:left;color:var(--mute);padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border:0}
+tbody tr:hover{background:#FCFBFC}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.toolbar>div{min-width:0}
+
+/* hero */
+.hero{background:linear-gradient(115deg,#8E0E14,#B3121A 60%,#C4252C);color:#fff;border-radius:18px;padding:32px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+.hero h1{color:#fff;text-transform:none;font-size:40px}
+.hero p{margin:10px 0 0;max-width:52ch;color:#FDE9E9;font-size:16px}
+.hero .streak{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);padding:5px 12px;border-radius:20px;font-weight:700;font-size:13px;margin-bottom:12px}
+.hero .btns{margin-top:20px}
+.arch{width:240px;max-width:100%;flex:none;opacity:.9}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:2px}
+.tile b{font-family:var(--head);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums}
+.tile span{font-size:13px;color:var(--mute)}
+.go{display:flex;flex-direction:column;gap:8px;padding:20px;border:1px solid var(--line);border-radius:12px;background:#fff;flex:1 1 220px;min-width:0}
+.go:hover{border-color:var(--red)}
+.go b{font-family:var(--head);letter-spacing:.06em;text-transform:uppercase;color:var(--red);font-size:14px}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:#5E555C}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{min-height:40px;padding:0 16px;border:0;background:#fff;font-weight:700;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--red);color:#fff}
+.ax{fill:#5E555C;font-size:12px;font-family:var(--body)}
+.tot{fill:var(--ink);font-size:12px;font-weight:700;font-family:var(--body)}
+.seg-bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*70ms)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.win{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.win:last-child{border:0}
+.win svg{flex:none;color:var(--green);margin-top:2px}
+
+/* case */
+.stepper{display:flex;flex-wrap:wrap;gap:8px}
+.step{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--mute)}
+.step b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#EEEAEF;font-family:var(--head)}
+.step.on{color:var(--red)}
+.step.on b{background:var(--red);color:#fff}
+.step.done b{background:var(--green-bg);color:var(--green)}
+.box{padding:14px 16px;border-radius:10px;background:var(--bg);font-size:14px}
+.box.hint{background:#FFF8E8;border:1px solid #EBD9A8}
+.box.good{background:var(--green-bg);color:var(--green)}
+.box.warn{background:var(--amber-bg);color:var(--amber)}
+.timer{font-family:var(--head);font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+
+/* pars + lists */
+.listbtn{display:flex;flex-direction:column;gap:6px;text-align:left;width:100%;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer}
+.listbtn:hover{border-color:var(--red)}
+.listbtn.on{border-color:var(--red);background:#FBF4F4}
+.letter{width:32px;height:32px;border-radius:8px;background:var(--red-t);color:var(--red);display:grid;place-items:center;font-family:var(--head);font-weight:700;flex:none}
+.field{display:flex;gap:12px;align-items:flex-start}
+.field>div{flex:1;min-width:0}
+.okmark{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--mute);font-weight:700}
+.okmark.y{color:var(--green)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.item{border:1px solid var(--line);border-radius:12px;background:#fff;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pf{display:flex;gap:14px;align-items:center}
+.pf .av{width:48px;height:48px;font-size:17px;background:var(--violet)}
+.coach{background:#FFFDF7;border:1px solid #E1D7C4;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+
+/* flashcards */
+.fstage{display:flex;flex-direction:column;align-items:center;gap:20px;padding:8px 0}
+.cardwrap{width:100%;max-width:520px;perspective:1200px;animation:cin .35s ease both}
+.cardwrap.out-left{animation:outl .26s ease forwards}
+.cardwrap.out-right{animation:outr .26s ease forwards}
+@keyframes cin{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes outl{to{opacity:0;transform:translateX(-70px) rotate(-5deg)}}
+@keyframes outr{to{opacity:0;transform:translateX(70px) rotate(5deg)}}
+.flipbtn{display:block;width:100%;border:0;background:none;padding:0;cursor:pointer;border-radius:18px}
+.flipper{position:relative;width:100%;height:290px;transition:transform .55s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.flipper.is-flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;text-align:center}
+.face.front{background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(60,20,30,.08)}
+.face.back{background:var(--red);color:#fff;transform:rotateY(180deg);box-shadow:0 8px 24px rgba(142,14,20,.25)}
+.face .term{font-family:var(--head);font-weight:700;font-size:44px;color:var(--red);line-height:1.1;text-wrap:balance}
+.face .def{font-size:19px;line-height:1.45;max-width:36ch}
+.face .tag{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.face.front .tag{color:var(--mute)}
+.face.back .tag{color:#FBD5D5}
+.face .tap{font-size:13px;color:var(--mute)}
+.face .meter{color:var(--red)}
+.rate{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.fprog{width:100%;max-width:520px;display:flex;flex-direction:column;gap:8px}
+.done{text-align:center;padding:40px 16px;display:flex;flex-direction:column;gap:12px;align-items:center;animation:cin .4s ease both}
+.done .big{font-family:var(--head);font-size:34px;font-weight:700;color:var(--red)}
+
+/* nav on phones */
+.tabbar{display:none}
+.chipsm{display:none}
+.sheet{position:fixed;inset:0;background:rgba(30,26,29,.45);z-index:40;display:flex;align-items:flex-end}
+.sheet[hidden]{display:none}
+.sheet>div{background:#fff;width:100%;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:4px}
+.sheet a{min-height:48px;display:flex;align-items:center;padding:0 12px;border-radius:8px;font-family:var(--head);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.sheet a:hover{background:var(--bg)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#1E1A1D;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:calc(100vw - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:860px){
+  .app{display:block}
+  .side{display:none}
+  .main{padding:20px 16px 110px}
+  h1{font-size:30px}
+  .hero{padding:24px}
+  .hero h1{font-size:30px}
+  .arch{display:none}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:30}
+  .tabbar a,.tabbar button{flex:1;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:700;color:#5E555C;background:none;border:0;cursor:pointer}
+  .tabbar .on{color:var(--red)}
+  .chipsm{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:-8px -16px 0;padding-left:16px;padding-right:16px}
+  .chipsm a{flex:none;min-height:40px;display:inline-flex;align-items:center;padding:0 16px;border-radius:20px;border:1px solid var(--line2);background:#fff;font-weight:700;font-size:14px}
+  .chipsm a.on{background:var(--red);border-color:var(--red);color:#fff}
+  .flipper{height:260px}
+  .face .term{font-size:36px}
+  .card{padding:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="app">
+  <nav class="side" id="side" aria-label="Main"></nav>
+  <main class="main" id="main" tabindex="-1"></main>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+<div class="sheet" id="sheet" hidden><div id="sheetbox"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- content from the earlier BRidge prototype ---------- */
+var QB = [{"id":"lead-1","type":"Leadership","number":1,"q":"Tell me about a time you led a team through a difficult project."},{"id":"lead-2","type":"Leadership","number":2,"q":"Describe a time you led without formal authority."},{"id":"lead-3","type":"Leadership","number":3,"q":"Tell me about a time you had to motivate a team member who was disengaged."},{"id":"lead-4","type":"Leadership","number":4,"q":"Describe a situation where you had to take charge when no one else would."},{"id":"lead-5","type":"Leadership","number":5,"q":"Tell me about a time you turned around an under-performing team or process."},{"id":"lead-6","type":"Leadership","number":6,"q":"Describe a time you had to delegate a task that you wanted to do yourself."},{"id":"lead-7","type":"Leadership","number":7,"q":"Tell me about a time you gave someone tough feedback as a leader."},{"id":"lead-8","type":"Leadership","number":8,"q":"Describe a time you rallied a group around an unpopular decision."},{"id":"lead-9","type":"Leadership","number":9,"q":"Tell me about a time you developed or coached someone who later succeeded."},{"id":"lead-10","type":"Leadership","number":10,"q":"Describe the leadership accomplishment you are most proud of and why."},{"id":"team-1","type":"Teamwork & Collaboration","number":1,"q":"Tell me about a time you worked on a team where you had to compromise."},{"id":"team-2","type":"Teamwork & Collaboration","number":2,"q":"Describe a time you joined a team late and had to get up to speed fast."},{"id":"team-3","type":"Teamwork & Collaboration","number":3,"q":"Tell me about a time a teammate was not pulling their weight."},{"id":"team-4","type":"Teamwork & Collaboration","number":4,"q":"Describe working with someone whose style was very different from yours."},{"id":"team-5","type":"Teamwork & Collaboration","number":5,"q":"Tell me about a team success where your contribution was critical."},{"id":"team-6","type":"Teamwork & Collaboration","number":6,"q":"Describe a time you worked across functions or cultures to get something done."},{"id":"team-7","type":"Teamwork & Collaboration","number":7,"q":"Tell me about a time you helped a struggling teammate."},{"id":"team-8","type":"Teamwork & Collaboration","number":8,"q":"Describe a time your team missed its goal. What was your role?"},{"id":"team-9","type":"Teamwork & Collaboration","number":9,"q":"Tell me about a time you had to share credit or step back for the team."},{"id":"team-10","type":"Teamwork & Collaboration","number":10,"q":"Describe how you built trust quickly with a new group."},{"id":"conflict-1","type":"Conflict Management","number":1,"q":"Tell me about a time you disagreed with a teammate or manager."},{"id":"conflict-2","type":"Conflict Management","number":2,"q":"Describe a conflict within a team that you helped resolve."},{"id":"conflict-3","type":"Conflict Management","number":3,"q":"Tell me about a time you had to deliver an unwelcome message to a colleague."},{"id":"conflict-4","type":"Conflict Management","number":4,"q":"Describe a time two stakeholders wanted opposing things from you."},{"id":"conflict-5","type":"Conflict Management","number":5,"q":"Tell me about a time you were wrong in a disagreement."},{"id":"conflict-6","type":"Conflict Management","number":6,"q":"Describe a time you managed conflict with someone more senior than you."},{"id":"conflict-7","type":"Conflict Management","number":7,"q":"Tell me about a time a difficult personality made a project hard."},{"id":"conflict-8","type":"Conflict Management","number":8,"q":"Describe a time you de-escalated a tense situation."},{"id":"conflict-9","type":"Conflict Management","number":9,"q":"Tell me about a time you disagreed with the team’s direction but still committed."},{"id":"conflict-10","type":"Conflict Management","number":10,"q":"Describe a conflict you could not fully resolve. What did you do?"},{"id":"influence-1","type":"Influencing & Persuasion","number":1,"q":"Tell me about a time you persuaded someone to adopt your idea."},{"id":"influence-2","type":"Influencing & Persuasion","number":2,"q":"Describe a time you convinced a skeptical audience using data."},{"id":"influence-3","type":"Influencing & Persuasion","number":3,"q":"Tell me about a time you had to sell an idea to senior leadership."},{"id":"influence-4","type":"Influencing & Persuasion","number":4,"q":"Describe a time you changed your own mind after someone persuaded you."},{"id":"influence-5","type":"Influencing & Persuasion","number":5,"q":"Tell me about a time you built consensus among people who disagreed."},{"id":"influence-6","type":"Influencing & Persuasion","number":6,"q":"Describe a time you influenced a decision without having authority."},{"id":"influence-7","type":"Influencing & Persuasion","number":7,"q":"Tell me about a time your first attempt at persuading someone failed."},{"id":"influence-8","type":"Influencing & Persuasion","number":8,"q":"Describe a time you tailored your message to different audiences."},{"id":"influence-9","type":"Influencing & Persuasion","number":9,"q":"Tell me about a time you got a resistant stakeholder on board with change."},{"id":"influence-10","type":"Influencing & Persuasion","number":10,"q":"Describe a time you negotiated a better outcome than expected."},{"id":"failure-1","type":"Failure & Mistakes","number":1,"q":"Tell me about a time you failed."},{"id":"failure-2","type":"Failure & Mistakes","number":2,"q":"Describe a mistake you made at work or school and how you handled it."},{"id":"failure-3","type":"Failure & Mistakes","number":3,"q":"Tell me about a time you received critical feedback that stung."},{"id":"failure-4","type":"Failure & Mistakes","number":4,"q":"Describe a project that did not go as planned and what you changed."},{"id":"failure-5","type":"Failure & Mistakes","number":5,"q":"Tell me about a time you missed a deadline or commitment."},{"id":"failure-6","type":"Failure & Mistakes","number":6,"q":"Describe a time you underestimated a task or risk."},{"id":"failure-7","type":"Failure & Mistakes","number":7,"q":"Tell me about a time you let a teammate or client down."},{"id":"failure-8","type":"Failure & Mistakes","number":8,"q":"Describe a time you had to recover from a setback quickly."},{"id":"failure-9","type":"Failure & Mistakes","number":9,"q":"Tell me about a decision you regret and what you learned."},{"id":"failure-10","type":"Failure & Mistakes","number":10,"q":"Describe a time you took responsibility for a mistake that was not obviously yours."},{"id":"ambiguity-1","type":"Handling Ambiguity","number":1,"q":"Tell me about a time you had to solve a problem with very little information."},{"id":"ambiguity-2","type":"Handling Ambiguity","number":2,"q":"Describe a time the goals or scope changed mid-project."},{"id":"ambiguity-3","type":"Handling Ambiguity","number":3,"q":"Tell me about a time you were given a vague assignment. What did you do?"},{"id":"ambiguity-4","type":"Handling Ambiguity","number":4,"q":"Describe a time you had to learn something completely new on a tight timeline."},{"id":"ambiguity-5","type":"Handling Ambiguity","number":5,"q":"Tell me about a time you structured a messy, unclear problem."},{"id":"ambiguity-6","type":"Handling Ambiguity","number":6,"q":"Describe a time you made progress when no one could tell you what “good” looked like."},{"id":"ambiguity-7","type":"Handling Ambiguity","number":7,"q":"Tell me about a time priorities conflicted and no one told you which mattered most."},{"id":"ambiguity-8","type":"Handling Ambiguity","number":8,"q":"Describe a time you had to adapt to a major unexpected change."},{"id":"ambiguity-9","type":"Handling Ambiguity","number":9,"q":"Tell me about a time you worked with unreliable or incomplete data."},{"id":"ambiguity-10","type":"Handling Ambiguity","number":10,"q":"Describe a time you went into a new environment with no playbook."},{"id":"pressure-1","type":"Pressure & Tight Deadlines","number":1,"q":"Tell me about a time you worked under extreme time pressure."},{"id":"pressure-2","type":"Pressure & Tight Deadlines","number":2,"q":"Describe how you prioritized when you had too many competing tasks."},{"id":"pressure-3","type":"Pressure & Tight Deadlines","number":3,"q":"Tell me about a time you had to make a high-stakes decision quickly."},{"id":"pressure-4","type":"Pressure & Tight Deadlines","number":4,"q":"Describe a time stress affected your performance and how you responded."},{"id":"pressure-5","type":"Pressure & Tight Deadlines","number":5,"q":"Tell me about a time you delivered despite a last-minute obstacle."},{"id":"pressure-6","type":"Pressure & Tight Deadlines","number":6,"q":"Describe a time you had to say no to protect quality or your capacity."},{"id":"pressure-7","type":"Pressure & Tight Deadlines","number":7,"q":"Tell me about a time you balanced multiple demanding commitments."},{"id":"pressure-8","type":"Pressure & Tight Deadlines","number":8,"q":"Describe a time you had to work long hours on a team project. How did you keep the team going?"},{"id":"pressure-9","type":"Pressure & Tight Deadlines","number":9,"q":"Tell me about a time you stayed calm when others were panicking."},{"id":"pressure-10","type":"Pressure & Tight Deadlines","number":10,"q":"Describe a time you had to cut scope to hit a deadline."},{"id":"decision-1","type":"Decision-Making & Judgment","number":1,"q":"Tell me about a difficult decision you made and how you made it."},{"id":"decision-2","type":"Decision-Making & Judgment","number":2,"q":"Describe a time you made a decision with incomplete data."},{"id":"decision-3","type":"Decision-Making & Judgment","number":3,"q":"Tell me about a time you had to choose between two good options."},{"id":"decision-4","type":"Decision-Making & Judgment","number":4,"q":"Describe a time you went against the majority in a decision."},{"id":"decision-5","type":"Decision-Making & Judgment","number":5,"q":"Tell me about a time you used analysis to change a decision."},{"id":"decision-6","type":"Decision-Making & Judgment","number":6,"q":"Describe a time you made an ethically difficult call."},{"id":"decision-7","type":"Decision-Making & Judgment","number":7,"q":"Tell me about a time you had to reverse a decision."},{"id":"decision-8","type":"Decision-Making & Judgment","number":8,"q":"Describe a time you weighed short-term gains against long-term impact."},{"id":"decision-9","type":"Decision-Making & Judgment","number":9,"q":"Tell me about a decision you made that was unpopular but right."},{"id":"decision-10","type":"Decision-Making & Judgment","number":10,"q":"Describe a time you escalated an issue instead of deciding alone."},{"id":"initiative-1","type":"Initiative & Entrepreneurial Drive","number":1,"q":"Tell me about a time you started something from scratch."},{"id":"initiative-2","type":"Initiative & Entrepreneurial Drive","number":2,"q":"Describe a time you went well beyond what was asked of you."},{"id":"initiative-3","type":"Initiative & Entrepreneurial Drive","number":3,"q":"Tell me about a time you spotted a problem no one else had noticed."},{"id":"initiative-4","type":"Initiative & Entrepreneurial Drive","number":4,"q":"Describe a time you improved a process or system on your own initiative."},{"id":"initiative-5","type":"Initiative & Entrepreneurial Drive","number":5,"q":"Tell me about a time you pursued a goal despite strong obstacles."},{"id":"initiative-6","type":"Initiative & Entrepreneurial Drive","number":6,"q":"Describe a time you took a calculated risk."},{"id":"initiative-7","type":"Initiative & Entrepreneurial Drive","number":7,"q":"Tell me about a time you created your own opportunity."},{"id":"initiative-8","type":"Initiative & Entrepreneurial Drive","number":8,"q":"Describe a time you challenged the status quo."},{"id":"initiative-9","type":"Initiative & Entrepreneurial Drive","number":9,"q":"Tell me about a time you taught yourself a skill to solve a real problem."},{"id":"initiative-10","type":"Initiative & Entrepreneurial Drive","number":10,"q":"Describe an achievement that shows your drive and persistence."},{"id":"client-1","type":"Client & Stakeholder Management","number":1,"q":"Tell me about a time you managed a demanding client or stakeholder."},{"id":"client-2","type":"Client & Stakeholder Management","number":2,"q":"Describe a time you had to manage expectations that were unrealistic."},{"id":"client-3","type":"Client & Stakeholder Management","number":3,"q":"Tell me about a time you built a strong relationship with a key stakeholder."},{"id":"client-4","type":"Client & Stakeholder Management","number":4,"q":"Describe a time you uncovered what a client really needed versus what they asked for."},{"id":"client-5","type":"Client & Stakeholder Management","number":5,"q":"Tell me about a time you delivered bad news to a client or customer."},{"id":"client-6","type":"Client & Stakeholder Management","number":6,"q":"Describe a time you recovered a relationship that was going badly."},{"id":"client-7","type":"Client & Stakeholder Management","number":7,"q":"Tell me about a time you had to present complex findings to a non-expert."},{"id":"client-8","type":"Client & Stakeholder Management","number":8,"q":"Describe a time you handled a stakeholder who changed requirements late."},{"id":"client-9","type":"Client & Stakeholder Management","number":9,"q":"Tell me about a time you exceeded a customer’s expectations."},{"id":"client-10","type":"Client & Stakeholder Management","number":10,"q":"Describe a time you balanced a client’s wishes against what was right for them."},{"id":"fit-1","type":"Resume Deep-Dive & Fit","number":1,"q":"Walk me through your resume and the story behind your choices."},{"id":"fit-2","type":"Resume Deep-Dive & Fit","number":2,"q":"Why consulting, and why now?"},{"id":"fit-3","type":"Resume Deep-Dive & Fit","number":3,"q":"Why this firm over others you are considering?"},{"id":"fit-4","type":"Resume Deep-Dive & Fit","number":4,"q":"Pick the bullet on your resume you are proudest of and take me deeper into it."},{"id":"fit-5","type":"Resume Deep-Dive & Fit","number":5,"q":"Tell me about a time your summer or internship experience taught you something unexpected."},{"id":"fit-6","type":"Resume Deep-Dive & Fit","number":6,"q":"What is your leadership style, and can you give me an example of it in action?"},{"id":"fit-7","type":"Resume Deep-Dive & Fit","number":7,"q":"What is the biggest professional challenge you have faced and how did you handle it?"},{"id":"fit-8","type":"Resume Deep-Dive & Fit","number":8,"q":"What do you see as your biggest strength and the area you are still developing?"},{"id":"fit-9","type":"Resume Deep-Dive & Fit","number":9,"q":"Where do you see yourself in five years, and how does this role help?"},{"id":"fit-10","type":"Resume Deep-Dive & Fit","number":10,"q":"Tell me about a time something on your resume did not go as well as it reads."}];
+var CASES = {"coffee":{"title":"The Campus Coffee Problem","context":"A fictional regional coffee chain operates 10 campus-area stores. The CEO says annual profit fell despite unchanged customer volume.","stages":[{"title":"Clarify the objective","q":"What would you ask the CEO before beginning your analysis?","data":"The client wants to understand why profit declined and restore last year’s annual profit.","hint":"Ask about revenue, variable costs, fixed costs, pricing, and time periods.","terms":["revenue","cost","profit"],"sample":"I would confirm the profitability target, time horizon, and store coverage; then separate the change into revenue and cost drivers."},{"title":"Build your issue tree","q":"How would you structure your profitability investigation?","data":"Assume each store sells the same mix of products. Customer volume is unchanged year over year.","hint":"Profit = revenue minus costs. Break each side into drivers.","terms":["price","volume","cost"],"sample":"Profit = price × units − variable cost per unit × units − fixed costs. I would compare prices and product mix, ingredient and labor costs, and rent and overhead by store."},{"title":"Calculate the profit decline","q":"What is the annual profit decline across all 10 stores?","data":"Each store sells 200,000 drinks annually. Average selling price = $5.00, unchanged. Variable cost rose from $2.00 to $2.30 per drink. Fixed costs unchanged.","hint":"Multiply the $0.30 unit cost increase by drinks per store and then by the number of stores.","terms":["cost","volume","profit"],"answer":600000,"tolerance":0.01,"unit":"USD per year (positive profit decrease)","sample":"0.30 × 200,000 × 10 = $600,000 annual profit decline."},{"title":"CEO recommendation","q":"Give a 45-second recommendation with the number, at least two actions, a risk, and a next step.","data":"The entire $600,000 decline is due to increased variable cost. The chain wants to preserve customer experience.","hint":"Lead with the answer, then evidence, actions, risk, and validation.","terms":["600","supplier","price","risk"],"sample":"Profit fell $600,000 due to $0.30 higher variable cost per drink. I recommend negotiating supply contracts and reducing waste before testing selective pricing. The risk is harming customer loyalty; pilot changes in two stores and monitor margins and satisfaction."}]},"bikes":{"title":"Electric Bicycle Market Entry","context":"A fictional mobility startup is considering a monthly e-bike subscription for students in one university town.","stages":[{"title":"Clarify entry goal","q":"Which questions would you ask before recommending an entry?","data":"The founder wants positive annual operating profit by year two.","hint":"Clarify market demand, price, utilization, costs, and competitive alternatives.","terms":["demand","price","cost"],"sample":"I would clarify the student customer segment, willingness to pay, subscriptions per year, bike costs, maintenance, churn and competition."},{"title":"Create a market entry framework","q":"Lay out a logical, non-overlapping structure to assess the opportunity.","data":"The market is one university town and the product is an all-inclusive monthly subscription.","hint":"Think market attractiveness, competitive differentiation, economics, and execution risks.","terms":["market","competition","cost"],"sample":"I would assess market demand and student preferences, competing transportation, per-customer economics and capital needs, and operating and regulatory risks."},{"title":"Break-even subscribers","q":"How many active subscribers are required to break even on annual operating profit?","data":"Monthly fee $90. Monthly variable cost per subscriber $30. Annual fixed operating costs $360,000. Ignore capital expenditures and taxes.","hint":"Contribution per year per subscriber = 12 × (monthly fee − monthly variable cost). Divide fixed costs by that contribution.","terms":["margin","subscriber","fixed"],"answer":500,"tolerance":0.01,"unit":"Active subscribers (whole number)","sample":"Annual subscriber contribution = ($90 − $30) × 12 = $720; break-even subscribers = $360,000 / $720 = 500."},{"title":"Go / no-go","q":"Recommend whether to enter if reliable demand estimates suggest 650 subscribers. Include a profit estimate, risks, and a test.","data":"At 650 subscribers, fee is $90/month, variable cost $30/month and annual fixed operating costs $360,000.","hint":"Compute 650 × $720 − $360,000. Then assess reliability and risks.","terms":["profit","demand","risk"],"sample":"Proceed with a limited pilot: forecast annual operating profit is 650 × $720 − $360,000 = $108,000, if demand holds. Risks include churn, theft and maintenance. Validate willingness to pay with paid preorders."}]},"stream":{"title":"Student Streaming Growth","context":"A fictional education-focused streaming platform wants to grow paid subscribers without sacrificing contribution margin.","stages":[{"title":"Define growth","q":"What clarifying questions should you ask?","data":"Management wants to double annual contribution profit, not simply registered users.","hint":"Distinguish users, conversion, retention, revenue and variable costs.","terms":["subscriber","revenue","cost"],"sample":"I would ask about baseline paid subscribers, price, churn, acquisition cost, platform cost, and customer segments."},{"title":"Growth tree","q":"Structure the potential profit-growth levers.","data":"Management has not approved a price change.","hint":"Think acquisition, paid conversion, retention and contribution per user.","terms":["acquisition","conversion","retention"],"sample":"I would evaluate traffic and acquisition channels, trial-to-paid conversion, paid retention and churn, and variable delivery and acquisition costs."},{"title":"Profit impact","q":"How much does annual contribution profit increase if the paid subscriber base rises from 8,000 to 10,000?","data":"Revenue is $12 per subscriber per month and variable delivery cost is $4 per subscriber per month. Ignore acquisition cost and fixed costs.","hint":"Multiply net monthly contribution by 12 months and incremental subscribers.","terms":["subscriber","margin","revenue"],"answer":192000,"tolerance":0.01,"unit":"USD annual contribution profit increase","sample":"(10,000 − 8,000) × ($12 − $4) × 12 = $192,000."},{"title":"Growth plan","q":"Recommend a sustainable growth strategy and say what you would measure.","data":"Students report high product satisfaction but low awareness. Paid retention has been steady.","hint":"Prioritize growth channels and guardrails, not vanity metrics.","terms":["awareness","conversion","retention"],"sample":"I would test campus partnerships and referral programs to address awareness, measure incremental paid conversions and acquisition cost, and monitor retention and contribution margin."}]},"hotel":{"title":"Boutique Hotel Pricing","context":"A fictional 100-room boutique hotel is evaluating whether to raise its average nightly rate.","stages":[{"title":"Clarify the decision","q":"What information would you seek before changing prices?","data":"The hotel currently runs at 80% occupancy. Demand may fall at higher prices.","hint":"Think price sensitivity, seasonality, costs and competitor positioning.","terms":["occupancy","price","cost"],"sample":"I would clarify the target profit, variable room cost, customer segments, seasonal demand, and estimated occupancy loss after a price increase."},{"title":"Price impact framework","q":"How would you compare the current and proposed pricing strategies?","data":"Assume the same number of available rooms in each scenario.","hint":"Compute occupied rooms × price for revenue and occupied rooms × variable cost for contribution.","terms":["revenue","occupancy","cost"],"sample":"I would compare room-night revenue, variable room servicing cost, contribution, competitive risk, and demand response at the new price."},{"title":"Daily contribution uplift","q":"What is the change in DAILY contribution if price rises from $150 to $170 and occupancy falls from 80% to 75%?","data":"100 available rooms daily. Variable cost is $40 per occupied room-night. Ignore fixed costs.","hint":"Current contribution is occupied rooms × ($150 − $40). Compare with proposed occupied rooms × ($170 − $40).","terms":["contribution","occupancy","price"],"answer":950,"tolerance":0.01,"unit":"USD daily contribution increase","sample":"Current = 80 × $110 = $8,800. Proposed = 75 × $130 = $9,750. Daily uplift = $950."},{"title":"Recommendation to GM","q":"Recommend whether to raise prices, note risks and propose a pilot.","data":"The price rise increases daily contribution by $950 under assumed occupancy. The hotel worries about weekday demand.","hint":"Lead with quantified economics, then limitations and how to test.","terms":["950","occupancy","risk"],"sample":"Pilot the $170 rate because projected contribution rises $950 daily. Demand estimates might be wrong, particularly on weekdays. A controlled test by date and segment can track occupancy, contribution and guest satisfaction."}]}};
+
+/* ---------- helpers ---------- */
+var $ = function(s,r){return (r||document).querySelector(s)};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc = function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var ICON = {
+  home:'M3 11l9-8 9 8M5 10v10h14V10',
+  casing:'M3 8h18v12H3zM8 8V5h8v3',
+  pars:'M4 5h16v11H9l-5 4z',
+  interview:'M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM6 11a6 6 0 0 0 12 0M12 17v4',
+  more:'M5 12h.01M12 12h.01M19 12h.01',
+  chev:'M6 9l6 6 6-6',
+  check:'M5 12l5 5 9-10',
+  back:'M15 6l-6 6 6 6',
+  bm:'M6 3h12v18l-6-4-6 4z'
+};
+function ic(n,sz,sw){sz=sz||22;return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||2)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+ICON[n]+'"/></svg>'}
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fdate(iso){var d=new Date(iso+'T12:00:00');return MON[d.getMonth()]+' '+d.getDate()}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function mmss(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function words(t){t=(t||'').trim();return t?t.split(/\s+/).length:0}
+var tt;function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('on')},2800)}
+var timers=[];function every(fn,ms){timers.push(setInterval(fn,ms))}function clearTimers(){timers.forEach(clearInterval);timers=[]}
+
+/* ---------- data ---------- */
+var GOAL=6;
+var TERMS=[
+ {id:1,t:'MECE',topic:'Consulting',d:'Mutually exclusive, collectively exhaustive. Groups that do not overlap and together cover everything.'},
+ {id:2,t:'Issue tree',topic:'Consulting',d:'A diagram that breaks one big question into smaller parts you can analyze separately.'},
+ {id:3,t:'Hypothesis-driven',topic:'Consulting',d:'Starting with a best-guess answer, then testing it with data instead of collecting everything first.'},
+ {id:4,t:'Synergy',topic:'Consulting',d:'Extra value created when two businesses combine, beyond what each makes alone.'},
+ {id:5,t:'Break-even point',topic:'Finance',d:'The sales volume where total revenue equals total cost, so profit is zero.'},
+ {id:6,t:'Contribution margin',topic:'Finance',d:'Price per unit minus variable cost per unit. What each sale adds toward fixed costs and profit.'},
+ {id:7,t:'EBITDA',topic:'Finance',d:'Earnings before interest, taxes, depreciation and amortization. A rough measure of operating profit.'},
+ {id:8,t:'NPV',topic:'Finance',d:'Net present value. Future cash flows discounted to today, minus the upfront cost.'},
+ {id:9,t:'Run rate',topic:'Finance',d:'A yearly projection from current results, such as this month’s revenue times twelve.'},
+ {id:10,t:'TAM',topic:'Marketing',d:'Total addressable market. The revenue available if you won every possible customer.'},
+ {id:11,t:'Value proposition',topic:'Marketing',d:'The specific benefit a customer gets from choosing your product over the alternatives.'},
+ {id:12,t:'CAC',topic:'Marketing',d:'Customer acquisition cost. The average spend to win one new customer.'},
+ {id:13,t:'LTV',topic:'Marketing',d:'Lifetime value. The total profit you expect from one customer over the whole relationship.'},
+ {id:14,t:'Churn',topic:'Marketing',d:'The share of customers who stop buying in a given period.'},
+ {id:15,t:'Market segmentation',topic:'Marketing',d:'Splitting customers into groups with shared needs so you can target each group.'},
+ {id:16,t:'Price elasticity',topic:'Marketing',d:'How much demand changes when price changes.'}
+];
+var TOPICS=['Consulting','Finance','Marketing'];
+var LEVEL_NAMES=['New','Learning','Familiar','Mastered'];
+
+var FW={
+ 'Profitability':['Revenue: price × volume','Costs: fixed and variable','Compare to last year and to competitors'],
+ 'Market entry':['Market: size and growth','Company: can we win here?','Competition and customers','Entry mode and risks'],
+ 'Growth':['Existing customers: sell more','New customers: reach more','New products','New markets'],
+ 'Pricing':['Costs: the price floor','Customer value: the price ceiling','Competitor prices','Demand at each price'],
+ 'M&A':['Strategic fit','Valuation','Synergies','Integration risks'],
+ 'Operations':['Process steps and bottlenecks','Capacity and demand','People and tools','Quality and cost'],
+ 'Market sizing':['Define the customer','Split into segments','Estimate volume per person','Multiply and sanity-check']
+};
+var FW_NOTE={
+ 'Profitability':'Profit = revenue − costs. Find which side moved, then which driver.',
+ 'Market entry':'Decide if the market is attractive and if the company can win in it.',
+ 'Growth':'Look for where new revenue can come from, then rank by size and effort.',
+ 'Pricing':'The right price sits between what it costs and what customers value.',
+ 'M&A':'Ask if the deal is worth the price and if the parts will work together.',
+ 'Operations':'Map the flow, find the slowest step, then fix that first.',
+ 'Market sizing':'Build the number from small, clear pieces and say each assumption aloud.'
+};
+
+/* library: first four have full staged content from your earlier file */
+var LIB=[
+ {id:'hotel',type:'Pricing',diff:'Easy',mins:15},
+ {id:'coffee',type:'Profitability',diff:'Medium',mins:20},
+ {id:'stream',type:'Growth',diff:'Medium',mins:25},
+ {id:'bikes',type:'Market entry',diff:'Hard',mins:25},
+ {id:'x1',name:'Airport coffee kiosks',type:'Market sizing',diff:'Easy',mins:15,ctx:'A fictional airport wants to know how much coffee travelers buy each year.',q:'Estimate yearly coffee demand at a mid-size airport.'},
+ {id:'x2',name:'University bookstore',type:'Operations',diff:'Easy',mins:15,ctx:'A fictional campus bookstore has long lines in the first week of each term.',q:'Find the cause of the lines and suggest a fix.'},
+ {id:'x3',name:'Pet supplies subscription',type:'Growth',diff:'Easy',mins:15,ctx:'A fictional pet supply company sells monthly boxes and wants more subscribers.',q:'How could the company grow subscriptions this year?'},
+ {id:'x4',name:'Furniture retailer decline',type:'Profitability',diff:'Easy',mins:20,ctx:'A fictional furniture chain has seen profit fall for three years in a row.',q:'Find out why profit is falling.'},
+ {id:'x5',name:'Fitness app pricing',type:'Pricing',diff:'Medium',mins:20,ctx:'A fictional fitness app charges $8 a month and is deciding whether to change the price.',q:'What price should the app charge?'},
+ {id:'x6',name:'Food delivery expansion',type:'Market entry',diff:'Medium',mins:25,ctx:'A fictional food delivery startup operates in three cities and is looking at a fourth.',q:'Should it expand to the new city?'},
+ {id:'x7',name:'Hospital wait times',type:'Operations',diff:'Medium',mins:25,ctx:'A fictional hospital saw its emergency room wait times double in one year.',q:'Find the cause and recommend a fix.'},
+ {id:'x8',name:'Solar panel startup',type:'Growth',diff:'Hard',mins:30,ctx:'A fictional solar startup sells to homeowners and wants to double revenue in two years.',q:'How should it double revenue?'},
+ {id:'x9',name:'Regional grocery merger',type:'M&A',diff:'Hard',mins:35,ctx:'Two fictional regional grocery chains are discussing a merger.',q:'Is the merger a good idea?'},
+ {id:'x10',name:'Local bank branch closures',type:'Profitability',diff:'Hard',mins:35,ctx:'A fictional regional bank is thinking about closing a third of its branches to protect profit.',q:'Should it close the branches?'}
+];
+function caseOf(id){
+  var l=LIB.filter(function(x){return x.id===id})[0]; if(!l) return null;
+  var base=CASES[id];
+  if(base){return {id:id,name:base.title,type:l.type,diff:l.diff,mins:l.mins,context:base.context,stages:base.stages}}
+  var fw=FW[l.type];
+  return {id:id,name:l.name,type:l.type,diff:l.diff,mins:l.mins,context:l.ctx,stages:[
+    {title:'Clarify the objective',q:'What would you ask the client before you begin?',data:l.ctx+' '+l.q,hint:'Ask about the goal, the timeframe, the customers and what success looks like.',terms:['goal','customer','time'],sample:'I would confirm the goal and timeframe, who the customers are, and how we will know the answer is right.'},
+    {title:'Build your structure',q:'How would you structure the problem?',data:'Pick 3 or 4 buckets that do not overlap.',hint:FW_NOTE[l.type],terms:[],sample:'A good structure for this type of case: '+fw.join('; ')+'.'},
+    {title:'Choose your first analysis',q:'Which analysis would you run first, and what do you expect to find?',data:'You have time for one analysis before the next meeting.',hint:'State a hypothesis, then name the one number that would prove or disprove it.',terms:['hypothesis'],sample:'I would start with the bucket most likely to explain the problem, state my hypothesis, and ask for the one data point that tests it.'},
+    {title:'Recommendation',q:'Give a 45-second recommendation with the answer, at least two reasons, a risk, and a next step.',data:'The client wants a clear recommendation, not a list of findings.',hint:'Lead with the answer, then evidence, actions, risk and next step.',terms:['risk','next'],sample:'My recommendation is X. First, evidence one. Second, evidence two. The main risk is Y, so the next step is to test Z.'}
+  ]};
+}
+
+var SEED_STORIES=[
+ {id:'s1',title:'Cross-functional product launch',skill:'Leadership',p:'As events lead for a 40-person club, our spring showcase was three weeks away and ticketing, sponsors and design were all waiting on each other.',a:'I mapped the dependencies on one page, set a 10-minute daily check-in and gave each team a single owner and deadline.',r:'Ticketing opened four days early and we sold 180 of 200 seats before the event.',s:'Clear owners beat extra meetings. I now name owners on day one of any group project.',evidence:'Ticket platform report',next:'Cut the answer to 90 seconds',date:'',status:'Needs practice',rehearsals:1},
+ {id:'s2',title:'Resolving a budget disagreement',skill:'Conflict resolution',p:'Two officers disagreed on whether to spend our last $600 on a speaker or on member socials, and the debate stalled planning for a week.',a:'I asked each to list what they wanted, found both wanted more attendance, and proposed a half-priced speaker plus one social.',r:'Both events ran under budget and attendance rose from 25 to 40 per meeting.',s:'Disagreements often share a goal. Naming it first made the trade-off easy.',evidence:'Sign-in sheets',next:'Add one sentence on how I listened',date:'',status:'Ready',rehearsals:3},
+ {id:'s3',title:'Learning SQL for a club project',skill:'Initiative',p:'Our club’s member data lived in five spreadsheets and nobody could answer basic questions about retention.',a:'',r:'',s:'',evidence:'',next:'',date:'',status:'Drafting',rehearsals:0}
+];
+var SKILLS=['Leadership','Teamwork','Problem solving','Conflict resolution','Initiative','Resilience','Analytical thinking'];
+
+var RES=[
+ {id:'g1',k:'Guide',t:'Case interview basics: from prompt to recommendation',m:'12 min read',d:'How a case flows and what interviewers listen for.',url:''},
+ {id:'g2',k:'Guide',t:'Mental math without a calculator',m:'8 min read',d:'Shortcuts for percentages, margins and market sizing.',url:''},
+ {id:'g3',k:'Guide',t:'Talking through a structure out loud',m:'6 min read',d:'Say your buckets clearly and keep the interviewer with you.',url:''},
+ {id:'g4',k:'Guide',t:'Building a PARS story from scratch',m:'10 min read',d:'Turn a club or class experience into a four-part answer.',url:''},
+ {id:'g5',k:'Guide',t:'Finance terms every business student needs',m:'9 min read',d:'Margins, EBITDA and NPV in plain language.',url:''},
+ {id:'g6',k:'Guide',t:'Following up after an interview',m:'5 min read',d:'What to send, when to send it and what to say.',url:''},
+ {id:'t1',k:'Template',t:'One-page resume',m:'Template',d:'A clean layout with room for impact bullets.',url:''},
+ {id:'t2',k:'Template',t:'Cover letter outline',m:'Template',d:'Four short paragraphs you can fill in.',url:''},
+ {id:'t3',k:'Template',t:'Case notes sheet',m:'Template',d:'A page to capture the prompt, structure and math.',url:''},
+ {id:'t4',k:'Template',t:'Thank-you email',m:'Template',d:'A short note to send within 24 hours.',url:''},
+ {id:'t5',k:'Template',t:'PARS story worksheet',m:'Template',d:'Problem, Action, Result and So what on one page.',url:''},
+ {id:'t6',k:'Template',t:'Weekly practice planner',m:'Template',d:'Plan six sessions across cases, stories and vocab.',url:''}
+];
+var MENTORS=[
+ {id:'m1',i:'AK',n:'Alex K.',r:'Consulting · Alumni mentor',tags:['Case interviews','Resume review']},
+ {id:'m2',i:'JR',n:'Jordan R.',r:'Product management · Alumni mentor',tags:['Behavioral','Tech recruiting']},
+ {id:'m3',i:'SP',n:'Sam P.',r:'Finance · Peer coach',tags:['Mock interviews','Technical questions']},
+ {id:'m4',i:'LT',n:'Lena T.',r:'Marketing · Alumni mentor',tags:['Networking','Cover letters']}
+];
+var PEERS=[
+ {id:'p1',t:'Case practice pair',when:'Mondays · 6:00 pm',who:'Two people · Beginner friendly'},
+ {id:'p2',t:'PARS story swap',when:'Wednesdays · 5:30 pm',who:'Three people · Bring one story'},
+ {id:'p3',t:'Mock interview hour',when:'Fridays · 12:00 pm',who:'Two people · Any level'}
+];
+var EVENTS=[
+ {id:'e1',t:'Mock interview night',when:'Thu, Nov 12 · 7:00 pm',where:'Location to be announced'},
+ {id:'e2',t:'Case practice pairs',when:'Thu, Nov 19 · 7:00 pm',where:'Location to be announced'},
+ {id:'e3',t:'Alumni coffee chat',when:'Thu, Dec 3 · 6:30 pm',where:'Location to be announced'}
+];
+
+/* ---------- state ---------- */
+var KEY='bridge.app.v2';
+function defaults(){return {name:'username',week:4,streak:5,caseDone:{hotel:'2026-10-28',coffee:'2026-10-30',x3:'2026-11-02'},caseWork:{},stories:JSON.parse(JSON.stringify(SEED_STORIES)),levels:{1:3,2:3,3:2,5:3,6:2,7:3,10:3,12:3,13:1,14:2,11:3,15:1},drafts:{},saved:{},res:{},req:{},rsvp:{},join:{}}}
+var S;
+try{S=Object.assign(defaults(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function bump(msg){S.week++;save();toast(msg+' That is '+S.week+' of '+GOAL+' sessions this week.')}
+function lvl(id){return S.levels[id]||0}
+
+/* ---------- nav ---------- */
+var NAV=[
+ {id:'dashboard',label:'Dashboard',subs:[]},
+ {id:'casing',label:'Casing',subs:[['library','Case library'],['frameworks','Frameworks'],['history','Case history']]},
+ {id:'pars',label:'PARS',subs:[['bank','Story bank'],['guide','How PARS works']]},
+ {id:'interview',label:'Interview',subs:[['practice','Practice session'],['bank','Question bank']]},
+ {id:'vocab',label:'Vocab Progress',subs:[['cards','Flashcards'],['glossary','Glossary'],['mastery','Mastery by topic']]},
+ {id:'resources',label:'Resources',subs:[['guides','Guides'],['templates','Templates'],['saved','Saved']]},
+ {id:'connect',label:'BRConnect',subs:[['mentors','Mentors'],['peers','Peer practice'],['events','Events']]}
+];
+var ctx={sec:'dashboard',sub:'',arg:''};
+var main=$('#main');
+function parse(){var h=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);return {sec:h[0]||'dashboard',sub:h[1]||'',arg:h[2]||''}}
+function secOf(id){return NAV.filter(function(n){return n.id===id})[0]||NAV[0]}
+function activeSub(){return ctx.sub==='case'?'library':ctx.sub}
+
+function renderSide(){
+  var h='<a class="logo" href="#/dashboard" aria-label="BRidge home">BRidge<i></i></a>';
+  NAV.forEach(function(n){
+    var on=n.id===ctx.sec, first=n.subs[0]?'/'+n.subs[0][0]:'';
+    h+='<a class="nav'+(on?' on':'')+'" href="#/'+n.id+first+'"'+(on?' aria-current="page"':'')+'><span>'+n.label+'</span>'+(n.subs.length?ic('chev',14,2.5):'')+'</a>';
+    if(on&&n.subs.length){h+='<div class="sub">'+n.subs.map(function(s){return '<a href="#/'+n.id+'/'+s[0]+'" class="'+(activeSub()===s[0]?'on':'')+'"'+(activeSub()===s[0]?' aria-current="true"':'')+'>'+s[1]+'</a>'}).join('')+'</div>'}
+  });
+  h+='<div class="me"><span class="av js-av">'+esc((S.name||'U').charAt(0).toUpperCase())+'</span><div style="min-width:0"><label class="sr" for="nameInput">Your username</label><input class="name-in" id="nameInput" type="text" maxlength="24" value="'+esc(S.name)+'"><div class="small mute">Tap your name to edit</div></div></div>';
+  $('#side').innerHTML=h;
+}
+function renderTabbar(){
+  var items=[['dashboard','Home','home'],['casing','Casing','casing'],['pars','PARS','pars'],['interview','Interview','interview']];
+  var h=items.map(function(i){var n=secOf(i[0]);var on=ctx.sec===i[0];return '<a href="#/'+i[0]+(n.subs[0]?'/'+n.subs[0][0]:'')+'" class="'+(on?'on':'')+'"'+(on?' aria-current="page"':'')+'>'+ic(i[2])+'<span>'+i[1]+'</span></a>'}).join('');
+  var moreOn=['vocab','resources','connect'].indexOf(ctx.sec)>-1;
+  h+='<button type="button" data-act="more" class="'+(moreOn?'on':'')+'" aria-haspopup="dialog">'+ic('more')+'<span>More</span></button>';
+  $('#tabbar').innerHTML=h;
+  $('#sheetbox').innerHTML=['vocab','resources','connect'].map(function(id){var n=secOf(id);return '<a href="#/'+id+'/'+n.subs[0][0]+'">'+n.label+'</a>'}).join('');
+}
+function subChips(){
+  var n=secOf(ctx.sec); if(!n.subs.length) return '';
+  return '<div class="chipsm" aria-label="'+n.label+' sections">'+n.subs.map(function(s){return '<a href="#/'+n.id+'/'+s[0]+'" class="'+(activeSub()===s[0]?'on':'')+'">'+s[1]+'</a>'}).join('')+'</div>';
+}
+function head(t,sub){return '<div class="pagehead"><h1>'+t+'</h1>'+(sub?'<p class="lede">'+sub+'</p>':'')+'</div>'}
+function pill(t,c){return '<span class="pill'+(c?' '+c:'')+'">'+esc(t)+'</span>'}
+function diffPill(d){return pill(d,d.toLowerCase())}
+function meter(n,max){var h='<span class="meter" aria-hidden="true">';for(var i=0;i<max;i++)h+='<b class="'+(i<n?'f':'')+'"></b>';return h+'</span>'}
+
+/* ---------- ui state ---------- */
+var ui={chart:'score',q:'',type:'All',diff:'All',
+  cid:'',stage:0,hint:false,sample:false,run:false,t:0,fb:'',
+  sid:'',sf:'All',
+  icat:'All',qid:'',iq:'',irun:false,isec:0,
+  vtopic:'All',gq:'',deck:null,vi:0,flipped:false,vdone:false,busy:false,reviewed:0,
+  rtype:'All'
+};
+
+/* ---------- dashboard ---------- */
+var CH={
+ score:{max:50,step:10,label:'points',data:{pars:[8,12,16,24],interview:[8,10,14,15],casing:[4,8,10,8]}},
+ sessions:{max:20,step:5,label:'sessions',data:{pars:[3,4,5,6],interview:[2,3,4,5],casing:[2,3,4,5]}}
+};
+var CATS=[['pars','PARS','#4A80F5'],['interview','Interview','#B08FF5'],['casing','Casing','#F4B96A']];
+var MONTHS4=['Jan','Feb','Mar','Apr'];
+function totals(m){var d=CH[m].data;return [0,1,2,3].map(function(i){return d.pars[i]+d.interview[i]+d.casing[i]})}
+function chartSVG(m){
+  var c=CH[m],W=560,x0=44,yb=240,yt=24,ph=yb-yt,slot=(W-8-x0)/4,bw=76;
+  var sc=function(v){return v/c.max*ph};
+  var g='';
+  for(var v=0;v<=c.max;v+=c.step){var y=yb-sc(v);g+='<line x1="'+x0+'" x2="'+(W-8)+'" y1="'+y+'" y2="'+y+'" stroke="#E6E2E7"/><text class="ax" x="'+(x0-8)+'" y="'+(y+4)+'" text-anchor="end">'+v+'</text>'}
+  var tot=totals(m),bars='';
+  for(var i=0;i<4;i++){
+    var bx=x0+slot*i+(slot-bw)/2,base=yb;
+    CATS.forEach(function(cat){
+      var val=c.data[cat[0]][i],hh=sc(val),yy=base-hh;
+      bars+='<rect class="seg-bar" style="--i:'+i+'" x="'+bx+'" y="'+yy+'" width="'+bw+'" height="'+hh+'" fill="'+cat[2]+'" stroke="#fff" stroke-width="1.5"><title>'+MONTHS4[i]+' '+cat[1]+': '+val+' '+c.label+'</title></rect>';
+      base=yy;
+    });
+    bars+='<text class="tot" x="'+(bx+bw/2)+'" y="'+(base-7)+'" text-anchor="middle">'+tot[i]+'</text><text class="ax" x="'+(bx+bw/2)+'" y="'+(yb+22)+'" text-anchor="middle">'+MONTHS4[i]+'</text>';
+  }
+  var alt='Stacked bars of '+c.label+' by month: '+MONTHS4.map(function(mm,i){return mm+' '+tot[i]}).join(', ');
+  return '<svg viewBox="0 0 '+W+' 268" width="100%" role="img" aria-label="'+alt+'">'+g+bars+'</svg>';
+}
+function chartNote(m){
+  var c=CH[m],t=totals(m),diff=t[3]-t[2],gains=CATS.map(function(cat){return [cat[1],c.data[cat[0]][3]-c.data[cat[0]][2]]});
+  var best=gains.slice().sort(function(a,b){return b[1]-a[1]})[0],same=gains.every(function(x){return x[1]===gains[0][1]});
+  var s='April: '+t[3]+' '+c.label+', '+(diff>=0?'up ':'down ')+Math.abs(diff)+' from March. ';
+  s+=same?'Every area grew by '+gains[0][1]+'.':best[0]+' grew the most (+'+best[1]+').';
+  return s;
+}
+function chartCard(){
+  var legend=CATS.map(function(c){return '<span><i style="background:'+c[2]+'"></i>'+c[1]+'</span>'}).join('');
+  return '<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px"><h2>'+(ui.chart==='score'?'Scores by month':'Sessions by month')+'</h2>'+
+   '<div class="seg" role="group" aria-label="Chart view"><button type="button" data-act="chart" data-v="score" aria-pressed="'+(ui.chart==='score')+'">Score</button><button type="button" data-act="chart" data-v="sessions" aria-pressed="'+(ui.chart==='sessions')+'">Sessions</button></div></div>'+
+   '<div class="leg">'+legend+'</div>'+chartSVG(ui.chart)+'<p class="small" style="margin:0;font-weight:700">'+chartNote(ui.chart)+'</p>';
+}
+var HERO_ARCH='<svg class="arch" viewBox="0 0 280 140" fill="none" stroke="#fff" stroke-linecap="round" aria-hidden="true"><path d="M12 118Q140 -14 268 118" stroke-opacity=".5" stroke-width="4"/><path d="M52 118Q140 24 228 118" stroke-opacity=".35" stroke-width="3"/><path d="M0 122H280" stroke-opacity=".6" stroke-width="4"/><path d="M60 122V76M100 122V45M140 122V32M180 122V45M220 122V76" stroke-opacity=".3" stroke-width="3"/></svg>';
+function pageDashboard(){
+  var doneCases=Object.keys(S.caseDone).length, mastered=TERMS.filter(function(t){return lvl(t.id)===3}).length;
+  var ready=S.stories.filter(function(s){return s.status==='Ready'}).length, answered=Object.keys(S.saved).length;
+  var left=Math.max(0,GOAL-S.week);
+  var msg=left>0?(S.week+' of '+GOAL+' sessions done this week. '+(left===1?'One more session':left+' more sessions')+' and you hit your goal.'):'You hit your weekly goal of '+GOAL+' sessions. Anything more is a bonus.';
+  var pct=Math.round(Math.min(S.week/GOAL,1)*100);
+  var go=function(href,t,line,p){return '<a class="go" href="'+href+'"><b>'+t+'</b><span>'+line+'</span><div class="bar"><span style="width:'+p+'%"></span></div></a>'};
+  return '<section class="hero" aria-label="Welcome"><div><span class="streak">'+S.streak+'-day streak</span><h1>Welcome back, <span class="js-name">'+esc(S.name||'there')+'</span>!</h1><p>'+msg+'</p><div class="btns"><a class="btn light" href="#/casing/library">Keep practicing</a><a class="btn ghost" href="#/vocab/cards">Review flashcards</a></div></div>'+HERO_ARCH+'</section>'+
+  '<section class="tiles" aria-label="Your numbers"><div class="tile"><b>'+doneCases+'</b><span>Cases completed</span></div><div class="tile"><b>'+ready+'</b><span>Stories ready</span></div><div class="tile"><b>'+answered+'</b><span>Answers saved</span></div><div class="tile"><b>'+mastered+'/'+TERMS.length+'</b><span>Terms mastered</span></div></section>'+
+  '<div class="row" style="align-items:stretch"><section class="card" style="flex:1 1 280px;align-items:center;justify-content:center" aria-label="Weekly goal"><h2 style="align-self:flex-start;margin-bottom:auto">My progress</h2>'+
+   '<svg viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="'+pct+' percent of your weekly goal"><circle cx="100" cy="100" r="76" fill="none" stroke="#F3E6E6" stroke-width="26"/><circle id="donut" cx="100" cy="100" r="76" fill="none" stroke="#B3121A" stroke-width="26" stroke-dasharray="0 478" transform="rotate(-90 100 100)" style="transition:stroke-dasharray .9s ease" data-v="'+(478*pct/100)+'"/><text x="100" y="112" text-anchor="middle" font-family="Chakra Petch,sans-serif" font-weight="600" font-size="38" fill="#1E1A1D">'+pct+'%</text></svg>'+
+   '<p class="small mute" style="margin:0;text-align:center">Weekly goal: '+S.week+' of '+GOAL+' sessions</p></section>'+
+   '<section class="card" id="chartCard" style="flex:3 1 460px" aria-label="Scores and sessions">'+chartCard()+'</section></div>'+
+  '<section aria-label="Pick up where you left off" style="display:flex;flex-direction:column;gap:12px"><h2>Pick up where you left off</h2><div class="row" style="gap:16px">'+
+   go('#/casing/library','Casing',doneCases+' of '+LIB.length+' cases done',Math.round(doneCases/LIB.length*100))+
+   go('#/pars/bank','PARS',ready+' of '+S.stories.length+' stories ready',S.stories.length?Math.round(ready/S.stories.length*100):0)+
+   go('#/interview/practice','Interview',answered+' of '+QB.length+' answers saved',Math.round(answered/QB.length*100))+
+   go('#/vocab/cards','Vocab',mastered+' of '+TERMS.length+' terms mastered',Math.round(mastered/TERMS.length*100))+'</div></section>'+
+  '<section class="card" aria-label="Recent wins"><h2>Recent wins</h2><div>'+
+   [['Finished the Campus Coffee case','Oct 30'],['Mastered 3 terms in a row','Nov 1'],['Marked a PARS story as ready','Nov 2']].map(function(w){return '<div class="win">'+ic('check',20,2.5)+'<div><b>'+w[0]+'</b><div class="small mute">'+w[1]+'</div></div></div>'}).join('')+'</div></section>';
+}
+
+/* ---------- casing ---------- */
+function statusOf(id){return S.caseDone[id]?'Done':(S.caseWork[id]?'In progress':'Not started')}
+function pageCasing(){
+  if(ctx.sub==='case') return pageCase();
+  if(ctx.sub==='frameworks'){
+    return head('Frameworks','Quick structures for the seven case types in the library.')+'<div class="grid3">'+Object.keys(FW).map(function(k){return '<section class="item"><div class="pills">'+pill(k)+'</div><p style="margin:0">'+FW_NOTE[k]+'</p><ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px">'+FW[k].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></section>'}).join('')+'</div>';
+  }
+  if(ctx.sub==='history'){
+    var done=Object.keys(S.caseDone).sort(function(a,b){return S.caseDone[b]<S.caseDone[a]?-1:1});
+    return head('Case history','Every case you have completed.')+(done.length?'<section class="card"><div class="tbl"><table><thead><tr><th>Case</th><th>Type</th><th>Difficulty</th><th>Completed</th><th></th></tr></thead><tbody>'+done.map(function(id){var c=caseOf(id);return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+pill(c.type)+'</td><td>'+diffPill(c.diff)+'</td><td>'+fdate(S.caseDone[id])+'</td><td><a class="btn sm" href="#/casing/case/'+id+'">Review</a></td></tr>'}).join('')+'</tbody></table></div></section>':'<div class="empty">No cases finished yet. Open the case library and start one.</div>');
+  }
+  var types=['All'].concat(Object.keys(FW)), diffs=['All','Easy','Medium','Hard'];
+  var rows=LIB.filter(function(l){var c=caseOf(l.id);return (ui.type==='All'||l.type===ui.type)&&(ui.diff==='All'||l.diff===ui.diff)&&(!ui.q||c.name.toLowerCase().indexOf(ui.q.toLowerCase())>-1)});
+  return head('Case library','Pick a case by type, difficulty and time. Easy cases take about 15 minutes. Hard ones take 30 or more.')+
+  '<section class="card" aria-label="Cases"><div class="toolbar"><div style="flex:1 1 220px"><label for="qCase">Search cases</label><input id="qCase" type="search" data-in="q" placeholder="Search by name" value="'+esc(ui.q)+'"></div>'+
+   '<div style="flex:1 1 180px"><label for="tCase">Case type</label><select id="tCase" data-in="type">'+types.map(function(t){return '<option'+(t===ui.type?' selected':'')+'>'+t+'</option>'}).join('')+'</select></div>'+
+   '<div><span class="lab">Difficulty</span><div class="chips" role="group" aria-label="Difficulty">'+diffs.map(function(d){return '<button type="button" class="chip" data-act="diff" data-v="'+d+'" aria-pressed="'+(ui.diff===d)+'">'+d+'</button>'}).join('')+'</div></div></div>'+
+   '<p class="small mute" style="margin:0" aria-live="polite">'+rows.length+' of '+LIB.length+' cases</p>'+
+   (rows.length?'<div class="tbl"><table><thead><tr><th>Case</th><th>Type</th><th>Difficulty</th><th>Time</th><th>Status</th><th></th></tr></thead><tbody>'+rows.map(function(l){var c=caseOf(l.id),st=statusOf(l.id);return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+pill(l.type)+'</td><td>'+diffPill(l.diff)+' <span class="mute">'+meter(l.diff==='Easy'?1:l.diff==='Medium'?2:3,3)+'</span></td><td style="white-space:nowrap">'+l.mins+' min</td><td>'+(st==='Done'?pill('Done','ready'):st==='In progress'?pill('In progress','practice'):'<span class="mute small">Not started</span>')+'</td><td><a class="btn sm'+(st==='Not started'?' pri':'')+'" href="#/casing/case/'+l.id+'">'+(st==='Done'?'Review':st==='In progress'?'Continue':'Start')+'</a></td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">No cases match. Clear a filter to see more.</div>')+'</section>';
+}
+function pageCase(){
+  var c=caseOf(ctx.arg); if(!c) return head('Case not found')+'<a class="back" href="#/casing/library">'+ic('back',18)+' Back to the case library</a>';
+  var st=c.stages[ui.stage], last=ui.stage===c.stages.length-1, w=(S.caseWork[c.id]||{}), note=(w['n'+ui.stage])||'';
+  var steps=c.stages.map(function(s,i){return '<button type="button" class="step'+(i===ui.stage?' on':'')+(i<ui.stage?' done':'')+'" data-act="stage" data-v="'+i+'" style="background:none;border:0;cursor:pointer;padding:0"'+(i===ui.stage?' aria-current="step"':'')+'><b>'+(i<ui.stage?ic('check',14,3):i+1)+'</b><span>'+esc(s.title)+'</span></button>'}).join('');
+  var hasNum=st.answer!=null;
+  return '<a class="back" href="#/casing/library">'+ic('back',18)+' All cases</a>'+head(esc(c.name))+
+  '<div class="pills">'+pill(c.type)+diffPill(c.diff)+pill(c.mins+' min')+(S.caseDone[c.id]?pill('Done','ready'):'')+'</div>'+
+  '<div class="row"><section class="card" style="flex:3 1 480px" aria-label="Case stage">'+
+   '<p class="mute" style="margin:0">'+esc(c.context)+'</p><div class="stepper">'+steps+'</div>'+
+   '<h2>Stage '+(ui.stage+1)+' of '+c.stages.length+'</h2><p style="margin:0;font-size:19px;font-weight:700;line-height:1.35">'+esc(st.q)+'</p>'+
+   '<div class="box"><b>Case data.</b> '+esc(st.data)+'</div>'+
+   (ui.hint?'<div class="box hint"><b>Hint.</b> '+esc(st.hint)+'</div>':'')+
+   (hasNum?'<div style="max-width:320px"><label for="num">Your number ('+esc(st.unit||'')+')</label><div style="display:flex;gap:8px"><input id="num" type="number" value="'+esc(w['v'+ui.stage]||'')+'" data-in="num" placeholder="Enter a number"><button type="button" class="btn" data-act="checknum">Check</button></div></div>':'')+
+   '<div><label for="note">Your answer and reasoning</label><textarea id="note" data-in="note" placeholder="Say it the way you would to the interviewer">'+esc(note)+'</textarea></div>'+
+   (ui.fb?'<div class="box '+(ui.fbc||'')+'" role="status">'+ui.fb+'</div>':'')+
+   (ui.sample?'<div class="box"><b>Sample approach.</b> '+esc(st.sample)+'</div>':'')+
+   '<div class="btns"><button type="button" class="btn" data-act="hint">'+(ui.hint?'Hide hint':'Show hint')+'</button><button type="button" class="btn" data-act="checkans">Check my answer</button><button type="button" class="btn" data-act="sample">'+(ui.sample?'Hide sample':'Show sample approach')+'</button></div>'+
+   '<div class="btns" style="justify-content:space-between"><button type="button" class="btn" data-act="prev"'+(ui.stage===0?' disabled':'')+'>Back</button>'+(last?'<button type="button" class="btn pri" data-act="finish">'+(S.caseDone[c.id]?'Case already complete':'Finish case')+'</button>':'<button type="button" class="btn pri" data-act="next">Next stage</button>')+'</div></section>'+
+  '<aside class="card" style="flex:1 1 220px;align-items:center;text-align:center" aria-label="Timer"><h2>Timer</h2><div class="timer" id="caseTimer">'+mmss(ui.t)+'</div><div class="btns" style="justify-content:center"><button type="button" class="btn pri" data-act="timer" id="timerBtn">'+(ui.run?'Pause':'Start')+'</button><button type="button" class="btn" data-act="timerreset">Reset</button></div><p class="small mute" style="margin:0">Target: '+c.mins+' minutes</p></aside></div>';
+}
+
+/* ---------- PARS ---------- */
+function filled(s){return ['p','a','r','s'].filter(function(k){return (s[k]||'').trim().length>=40}).length}
+function pageStory(){
+  if(ctx.sub==='guide'){
+    var g=[['P','Problem','Set the scene fast. What was happening, what was your role and what was at stake?','As events lead, our showcase was three weeks away and three teams were stuck waiting on each other.'],['A','Action','Say what you personally decided and did. Use “I”, not “we”.','I mapped the dependencies, set a daily check-in and gave each team one owner.'],['R','Result','Give the outcome with evidence. A number is best.','Ticketing opened four days early and we sold 180 of 200 seats.'],['S','So what','Say what you learned and why it matters for the role you want.','Clear owners beat extra meetings, and I start every project by naming them.']];
+    return head('How PARS works','Four parts, about two minutes out loud.')+'<div class="grid2">'+g.map(function(x){return '<section class="item"><div style="display:flex;gap:12px;align-items:center"><span class="letter">'+x[0]+'</span><h3>'+x[1]+'</h3></div><p style="margin:0">'+x[2]+'</p><p class="small mute" style="margin:0">Example: '+x[3]+'</p></section>'}).join('')+'</div><div class="btns"><a class="btn pri" href="#/pars/bank">Open my story bank</a></div>';
+  }
+  if(!ui.sid||!S.stories.some(function(s){return s.id===ui.sid})) ui.sid=S.stories[0]?S.stories[0].id:'';
+  var sf=['All','Drafting','Needs practice','Ready'];
+  var list=S.stories.filter(function(s){return ui.sf==='All'||s.status===ui.sf});
+  var cur=S.stories.filter(function(s){return s.id===ui.sid})[0];
+  var left='<section style="flex:1 1 300px;display:flex;flex-direction:column;gap:12px;min-width:0" aria-label="Saved stories"><h2>Saved stories ('+S.stories.length+')</h2>'+
+   '<div class="chips" role="group" aria-label="Filter stories">'+sf.map(function(f){return '<button type="button" class="chip" data-act="sf" data-v="'+f+'" aria-pressed="'+(ui.sf===f)+'">'+f+'</button>'}).join('')+'</div>'+
+   (list.length?list.map(function(s){return '<button type="button" class="listbtn'+(s.id===ui.sid?' on':'')+'" data-act="story" data-id="'+s.id+'"><b>'+esc(s.title||'Untitled story')+'</b><div class="pills">'+pill(s.skill)+'<span data-st="'+s.id+'">'+statusPill(s.status)+'</span></div><span class="small mute">'+s.rehearsals+' rehearsal'+(s.rehearsals===1?'':'s')+(s.date?' · next practice '+fdate(s.date):'')+'</span></button>'}).join(''):'<div class="empty">No stories with this status.</div>')+
+   '<div class="btns"><button type="button" class="btn pri" data-act="newstory">+ New story</button><button type="button" class="btn" data-act="export">Export for Excel</button></div></section>';
+  var right=cur?editor(cur):'<div class="empty" style="flex:3 1 480px">Create your first story to begin.</div>';
+  return head('PARS story bank','Build reusable stories, track your evidence and log each rehearsal.')+'<div class="row">'+left+right+'</div>';
+}
+function statusPill(s){return pill(s,s==='Ready'?'ready':s==='Needs practice'?'practice':'')}
+function okm(s,k){var y=(s[k]||'').trim().length>=40;return '<span class="okmark'+(y?' y':'')+'" data-ok="'+k+'">'+(y?ic('check',14,3)+' Complete':'Needs a bit more')+'</span>'}
+function editor(s){
+  var f=filled(s);
+  var fld=function(k,l,hint){return '<div class="field"><span class="letter">'+k.toUpperCase().replace('S','S')+'</span><div><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><label for="f_'+k+'" style="margin:0">'+l+'</label>'+okm(s,k)+'</div><textarea id="f_'+k+'" data-in="sf" data-f="'+k+'" placeholder="'+hint+'">'+esc(s[k])+'</textarea></div></div>'};
+  return '<section class="card" style="flex:3 1 480px" aria-label="Story editor"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px"><h2>Edit story</h2><span class="small mute">Saved automatically</span></div>'+
+   '<div class="row" style="gap:12px"><div style="flex:2 1 240px"><label for="f_title">Title</label><input id="f_title" type="text" data-in="sf" data-f="title" value="'+esc(s.title)+'"></div><div style="flex:1 1 180px"><label for="f_skill">Competency</label><select id="f_skill" data-in="sf" data-f="skill">'+SKILLS.map(function(k){return '<option'+(k===s.skill?' selected':'')+'>'+k+'</option>'}).join('')+'</select></div></div>'+
+   '<div><div style="display:flex;justify-content:space-between" class="small"><b id="fcount">'+f+' of 4 sections complete</b><span class="mute">40+ characters each</span></div><div class="bar" style="margin-top:6px"><span id="fbar" style="width:'+(f*25)+'%"></span></div></div>'+
+   fld('p','Problem: the situation, your role and the stakes','What was happening?')+fld('a','Action: what you personally decided and did','What did you do?')+fld('r','Result: the outcome with evidence','What changed? Use a number.')+fld('s','So what: what you learned and why it matters','What does this say about you for the role?')+
+   '<div class="row" style="gap:12px"><div style="flex:1 1 220px"><label for="f_evidence">Evidence or metric source</label><input id="f_evidence" type="text" data-in="sf" data-f="evidence" value="'+esc(s.evidence)+'" placeholder="Where can you verify it?"></div><div style="flex:1 1 220px"><label for="f_next">Next improvement</label><input id="f_next" type="text" data-in="sf" data-f="next" value="'+esc(s.next)+'"></div></div>'+
+   '<div class="row" style="gap:12px"><div style="flex:1 1 180px"><label for="f_status">Preparation status</label><select id="f_status" data-in="sf" data-f="status">'+['Drafting','Needs practice','Ready'].map(function(k){return '<option'+(k===s.status?' selected':'')+'>'+k+'</option>'}).join('')+'</select></div><div style="flex:1 1 180px"><label for="f_date">Next practice date</label><input id="f_date" type="date" data-in="sf" data-f="date" value="'+esc(s.date)+'"></div></div>'+
+   '<div class="btns"><button type="button" class="btn pri" data-act="rehearse">Log a rehearsal</button><button type="button" class="btn" data-act="delstory" id="delBtn">Delete story</button></div></section>';
+}
+function updateStoryUI(s){
+  var f=filled(s),c=$('#fcount'),b=$('#fbar');
+  if(c)c.textContent=f+' of 4 sections complete'; if(b)b.style.width=(f*25)+'%';
+  ['p','a','r','s'].forEach(function(k){var el=$('[data-ok="'+k+'"]');if(el){var y=(s[k]||'').trim().length>=40;el.className='okmark'+(y?' y':'');el.innerHTML=y?ic('check',14,3)+' Complete':'Needs a bit more'}});
+  var sp=$('[data-st="'+s.id+'"]');if(sp)sp.innerHTML=statusPill(s.status);
+}
+
+/* ---------- interview ---------- */
+var QCATS=(function(){var o=[];QB.forEach(function(q){if(o.indexOf(q.type)<0)o.push(q.type)});return o})();
+function iqList(){return QB.filter(function(q){return ui.icat==='All'||q.type===ui.icat})}
+function pageInterview(){
+  var answered=Object.keys(S.saved).length;
+  if(ctx.sub==='bank'){
+    var rows=QB.filter(function(q){return (ui.icat==='All'||q.type===ui.icat)&&(!ui.iq||q.q.toLowerCase().indexOf(ui.iq.toLowerCase())>-1)});
+    return head('Question bank',QB.length+' questions across '+QCATS.length+' categories.')+'<section class="card"><div class="toolbar"><div style="flex:1 1 220px"><label for="iqs">Search questions</label><input id="iqs" type="search" data-in="iq" value="'+esc(ui.iq)+'" placeholder="Search"></div><div style="flex:1 1 220px"><label for="icat2">Category</label><select id="icat2" data-in="icat"><option>All</option>'+QCATS.map(function(c){return '<option'+(c===ui.icat?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select></div></div><p class="small mute" style="margin:0" aria-live="polite">'+rows.length+' questions</p>'+
+     (rows.length?'<div style="display:flex;flex-direction:column">'+rows.map(function(q){return '<div class="win" style="align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="flex:1 1 320px;min-width:0"><b>'+esc(q.q)+'</b><div class="pills" style="margin-top:4px">'+pill(q.type)+(S.saved[q.id]?pill('Answered','ready'):'')+'</div></div><button type="button" class="btn sm" data-act="ipick" data-id="'+q.id+'">Practice</button></div>'}).join('')+'</div>':'<div class="empty">No questions match.</div>')+'</section>';
+  }
+  var list=iqList(); if(!ui.qid||!list.some(function(q){return q.id===ui.qid})) ui.qid=list[0].id;
+  var idx=list.map(function(q){return q.id}).indexOf(ui.qid), q=list[idx], draft=S.drafts[q.id]||'';
+  return head('Interview','Practice a PARS answer out loud, then write the key points.')+
+  '<div class="row"><div style="flex:3 1 480px;display:flex;flex-direction:column;gap:24px;min-width:0">'+
+   '<section class="card"><div class="row" style="gap:16px"><div style="flex:1 1 260px"><label for="icat">Question type</label><select id="icat" data-in="icat"><option value="All">All question types ('+QB.length+')</option>'+QCATS.map(function(c){return '<option'+(c===ui.icat?' selected':'')+' value="'+esc(c)+'">'+esc(c)+' (10)</option>'}).join('')+'</select></div></div></section>'+
+   '<section class="card" aria-label="Current question"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px"><div class="pills">'+pill('Question '+(idx+1)+' of '+list.length)+pill(q.type)+(S.saved[q.id]?pill('Answered','ready'):'')+'</div><b style="font-size:22px;font-variant-numeric:tabular-nums" id="iTimer">'+mmss(ui.isec)+'</b></div>'+
+   '<p style="margin:0;font-size:22px;font-weight:700;line-height:1.3">'+esc(q.q)+'</p>'+
+   '<div><label for="ans">Your answer notes</label><textarea id="ans" data-in="ans" style="min-height:190px" placeholder="Write the key beats of your PARS answer">'+esc(draft)+'</textarea><div class="small mute" id="wc" style="margin-top:4px">'+words(draft)+' words · aim for 120 to 200</div></div>'+
+   '<div class="btns"><button type="button" class="btn pri" data-act="isave">Save answer</button><button type="button" class="btn" data-act="itimer" id="iBtn">'+(ui.irun?'Pause timer':'Start timer')+'</button><button type="button" class="btn" data-act="inext">Next question</button></div></section></div>'+
+  '<aside class="coach" style="flex:1 1 260px" aria-label="PARS coach"><h2 style="color:#8E5D23">PARS coach</h2>'+[['P','Problem','What was happening and what did you own?'],['A','Action','What did you personally decide and do?'],['R','Result','What changed? Give evidence.'],['S','So what','What did you learn, and how does it apply to the role?']].map(function(x){return '<div class="field"><span class="letter" style="background:#F0E1D5;color:#9E1B27">'+x[0]+'</span><div><b>'+x[1]+'</b><div class="small mute">'+x[2]+'</div></div></div>'}).join('')+'<div class="small"><b>'+answered+'</b> of '+QB.length+' answers saved</div></aside></div>';
+}
+
+/* ---------- vocab ---------- */
+function buildDeck(){
+  var t=TERMS.filter(function(x){return ui.vtopic==='All'||x.topic===ui.vtopic}).sort(function(a,b){return lvl(a.id)-lvl(b.id)||a.id-b.id});
+  ui.deck=t.map(function(x){return x.id});ui.vi=0;ui.flipped=false;ui.vdone=false;ui.reviewed=0;ui.busy=false;
+}
+function term(id){return TERMS.filter(function(t){return t.id===id})[0]}
+function cardHTML(){
+  if(ui.vdone||ui.vi>=ui.deck.length){
+    var m=ui.deck.filter(function(id){return lvl(id)===3}).length;
+    return '<div class="done"><div class="big">Nice work!</div><p style="margin:0;max-width:40ch">You reviewed '+ui.reviewed+' card'+(ui.reviewed===1?'':'s')+'. '+m+' of '+ui.deck.length+' in this deck are mastered.</p><div class="btns" style="justify-content:center"><button type="button" class="btn pri" data-act="restart">Study again</button><a class="btn" href="#/vocab/mastery">See mastery</a></div></div>';
+  }
+  var t=term(ui.deck[ui.vi]);
+  return '<div class="cardwrap" id="cw"><button type="button" class="flipbtn" data-act="flip" id="flipBtn" aria-label="Flip card. Showing the '+(ui.flipped?'definition':'term')+'."><div class="flipper'+(ui.flipped?' is-flipped':'')+'" id="flipper"><div class="face front"><span class="tag">'+t.topic+'</span><span class="term">'+esc(t.t)+'</span>'+meter(lvl(t.id),3)+'<span class="tap">Tap to flip</span></div><div class="face back"><span class="tag">'+esc(t.t)+'</span><span class="def">'+esc(t.d)+'</span></div></div></button></div>'+
+  '<div class="rate" role="group" aria-label="How well did you know it?"><button type="button" class="btn" data-act="rate" data-v="again" '+(ui.flipped?'':'disabled')+'>Again (1)</button><button type="button" class="btn" data-act="rate" data-v="good" '+(ui.flipped?'':'disabled')+'>Good (2)</button><button type="button" class="btn pri" data-act="rate" data-v="easy" '+(ui.flipped?'':'disabled')+'>Easy (3)</button></div>';
+}
+function progHTML(){
+  var n=ui.deck.length,i=Math.min(ui.vi,n);
+  return '<div class="small" style="display:flex;justify-content:space-between"><b id="vcount" aria-live="polite">'+(i>=n?'Deck complete':'Card '+(i+1)+' of '+n)+'</b><span class="mute">'+ui.reviewed+' reviewed</span></div><div class="bar blue"><span id="vbar" style="width:'+(n?i/n*100:0)+'%"></span></div>';
+}
+function pageVocab(){
+  var mastered=TERMS.filter(function(t){return lvl(t.id)===3}).length;
+  if(ctx.sub==='glossary'){
+    var rows=TERMS.filter(function(t){return !ui.gq||(t.t+' '+t.d).toLowerCase().indexOf(ui.gq.toLowerCase())>-1}).sort(function(a,b){return a.t.localeCompare(b.t)});
+    return head('Glossary',TERMS.length+' terms to know.')+'<section class="card"><div style="max-width:420px"><label for="gq">Search terms</label><input id="gq" type="search" data-in="gq" value="'+esc(ui.gq)+'" placeholder="Search"></div>'+(rows.length?rows.map(function(t){return '<div class="win" style="flex-wrap:wrap;justify-content:space-between"><div style="flex:1 1 360px;min-width:0"><b>'+esc(t.t)+'</b> '+pill(t.topic)+'<div class="mute">'+esc(t.d)+'</div></div><div class="small mute" style="white-space:nowrap">'+meter(lvl(t.id),3)+' '+LEVEL_NAMES[lvl(t.id)]+'</div></div>'}).join(''):'<div class="empty">No terms match.</div>')+'</section>';
+  }
+  if(ctx.sub==='mastery'){
+    return head('Mastery by topic',mastered+' of '+TERMS.length+' terms mastered overall.')+'<section class="card">'+TOPICS.map(function(tp){var ts=TERMS.filter(function(t){return t.topic===tp}),m=ts.filter(function(t){return lvl(t.id)===3}).length,l=ts.filter(function(t){return lvl(t.id)===1||lvl(t.id)===2}).length;return '<div><div style="display:flex;justify-content:space-between;font-weight:700"><span>'+tp+'</span><span style="font-variant-numeric:tabular-nums">'+m+' / '+ts.length+'</span></div><div class="bar blue" style="margin:6px 0"><span style="width:'+(m/ts.length*100)+'%"></span></div><div class="small mute">'+m+' mastered · '+l+' learning · '+(ts.length-m-l)+' new</div></div>'}).join('')+'<div class="btns"><a class="btn pri" href="#/vocab/cards">Practice flashcards</a><button type="button" class="btn" data-act="resetvocab">Reset progress</button></div></section>';
+  }
+  if(!ui.deck) buildDeck();
+  return head('Vocab progress','Flip each card, then say how well you knew it. Harder cards come back first.')+
+   '<div class="chips" role="group" aria-label="Topic">'+['All'].concat(TOPICS).map(function(t){return '<button type="button" class="chip" data-act="vtopic" data-v="'+t+'" aria-pressed="'+(ui.vtopic===t)+'">'+t+'</button>'}).join('')+'</div>'+
+   '<section class="card" aria-label="Flashcards"><div class="fprog" id="vprog" style="align-self:center">'+progHTML()+'</div><div class="fstage" id="vstage">'+cardHTML()+'</div><p class="small mute" style="margin:0;text-align:center">Shortcuts: press 1, 2 or 3 to rate a flipped card.</p></section>';
+}
+
+/* ---------- resources ---------- */
+function pageResources(){
+  var items=RES.filter(function(r){return ctx.sub==='templates'?r.k==='Template':ctx.sub==='saved'?S.res[r.id]:r.k==='Guide'});
+  var ttl={guides:'Guides',templates:'Templates',saved:'Saved resources'}[ctx.sub]||'Guides';
+  return head(ttl,ctx.sub==='templates'?'Starting points you can copy and make your own.':ctx.sub==='saved'?'Everything you bookmarked.':'Short reads to help you prepare.')+
+  (items.length?'<div class="grid3">'+items.map(function(r){return '<article class="item"><div class="pills">'+pill(r.k)+'<span class="small mute" style="align-self:center">'+r.m+'</span></div><h3>'+esc(r.t)+'</h3><p style="margin:0" class="mute">'+esc(r.d)+'</p><div class="btns" style="margin-top:auto"><button type="button" class="btn sm pri" data-act="ropen" data-id="'+r.id+'">Open</button><button type="button" class="btn sm" data-act="rsave" data-id="'+r.id+'" aria-pressed="'+(!!S.res[r.id])+'">'+(S.res[r.id]?'Saved':'Save')+'</button></div></article>'}).join('')+'</div>':'<div class="empty">Nothing saved yet. Use Save on any guide or template.</div>')+
+  '<p class="small mute" style="margin:0">These are sample listings. Add a link to each item in the <code>RES</code> list in index.html so Open goes to your page.</p>';
+}
+
+/* ---------- connect ---------- */
+function pageConnect(){
+  var note='<p class="small mute" style="margin:0">Sample listings for design. Replace with your real mentors and events.</p>';
+  if(ctx.sub==='peers') return head('Peer practice','Join a recurring practice group.')+'<div class="grid3">'+PEERS.map(function(p){return '<article class="item"><h3>'+p.t+'</h3><div>'+p.when+'</div><div class="small mute">'+p.who+'</div><div class="btns" style="margin-top:auto"><button type="button" class="btn sm pri" data-act="join" data-id="'+p.id+'" aria-pressed="'+(!!S.join[p.id])+'">'+(S.join[p.id]?'Joined':'Join group')+'</button></div></article>'}).join('')+'</div>'+note;
+  if(ctx.sub==='events') return head('Events','Upcoming sessions with your club.')+'<div class="grid3">'+EVENTS.map(function(e){return '<article class="item"><h3>'+e.t+'</h3><div>'+e.when+'</div><div class="small mute">'+e.where+'</div><div class="btns" style="margin-top:auto"><button type="button" class="btn sm pri" data-act="rsvp" data-id="'+e.id+'" aria-pressed="'+(!!S.rsvp[e.id])+'">'+(S.rsvp[e.id]?'You are going':'RSVP')+'</button></div></article>'}).join('')+'</div>'+note;
+  return head('BRConnect','Find a mentor who has been where you are heading.')+'<div class="grid3">'+MENTORS.map(function(m){return '<article class="item"><div class="pf"><span class="av">'+m.i+'</span><div><b>'+m.n+'</b><div class="small mute">'+m.r+'</div></div></div><div class="pills">'+m.tags.map(function(t){return pill(t)}).join('')+'</div><div class="btns" style="margin-top:auto"><button type="button" class="btn sm pri" data-act="req" data-id="'+m.id+'" aria-pressed="'+(!!S.req[m.id])+'">'+(S.req[m.id]?'Requested':'Request intro')+'</button></div></article>'}).join('')+'</div>'+note;
+}
+
+/* ---------- render ---------- */
+var PAGES={dashboard:pageDashboard,casing:pageCasing,pars:pageStory,interview:pageInterview,vocab:pageVocab,resources:pageResources,connect:pageConnect};
+function build(){main.innerHTML=subChips()+PAGES[ctx.sec]()+'<p class="foot">BRidge is an independent student practice tool. It is not affiliated with or endorsed by Cornell University. Case studies are fictional and original.</p>'}
+function afterBuild(){
+  var d=$('#donut');if(d){requestAnimationFrame(function(){requestAnimationFrame(function(){d.setAttribute('stroke-dasharray',d.dataset.v+' 478')})})}
+}
+function paint(focusId){
+  var y=window.scrollY;build();afterBuild();window.scrollTo(0,y);
+  if(focusId){var el=document.getElementById(focusId);if(el){el.focus();try{var l=el.value.length;el.setSelectionRange(l,l)}catch(e){}}}
+}
+function route(){
+  clearTimers();var r=parse(),n=secOf(r.sec);
+  ctx={sec:n.id,sub:r.sub||(n.subs[0]?n.subs[0][0]:''),arg:r.arg};
+  if(ctx.sec==='casing'&&ctx.sub==='case'){
+    var c=caseOf(ctx.arg);
+    if(c&&ui.cid!==ctx.arg){ui.cid=ctx.arg;ui.stage=0;ui.hint=false;ui.sample=false;ui.run=false;ui.t=c.mins*60;ui.fb=''}
+    every(1000,function(){if(ui.run&&ui.t>0){ui.t--;var e=$('#caseTimer');if(e)e.textContent=mmss(ui.t);if(ui.t===0){ui.run=false;toast('Time is up. Wrap up your recommendation.');var b=$('#timerBtn');if(b)b.textContent='Start'}}});
+  }
+  if(ctx.sec==='interview'&&ctx.sub==='practice'){every(1000,function(){if(ui.irun){ui.isec++;var e=$('#iTimer');if(e)e.textContent=mmss(ui.isec)}})}
+  if(ctx.sec==='vocab'&&ctx.sub==='cards'&&!ui.deck)buildDeck();
+  document.title=(n.label==='Dashboard'?'BRidge':n.label+' | BRidge');
+  renderSide();renderTabbar();build();afterBuild();window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+/* ---------- actions ---------- */
+function stageStore(){var c=ctx.arg;S.caseWork[c]=S.caseWork[c]||{};return S.caseWork[c]}
+function rateCard(kind){
+  if(ui.busy||!ui.flipped)return;ui.busy=true;
+  var id=ui.deck[ui.vi],l=lvl(id);
+  S.levels[id]=kind==='again'?1:kind==='good'?(l<2?2:3):3;save();
+  var cw=$('#cw');if(cw)cw.classList.add(kind==='again'?'out-left':'out-right');
+  setTimeout(function(){
+    ui.vi++;ui.reviewed++;ui.flipped=false;ui.busy=false;
+    if(ui.vi>=ui.deck.length){ui.vdone=true;bump('Deck complete.')}
+    var st=$('#vstage'),pg=$('#vprog');if(st)st.innerHTML=cardHTML();if(pg)pg.innerHTML=progHTML();
+    var f=$('#flipBtn');if(f)f.focus({preventScroll:true});
+  },270);
+}
+function flipCard(){
+  var f=$('#flipper');if(!f||ui.busy)return;ui.flipped=!ui.flipped;f.classList.toggle('is-flipped',ui.flipped);
+  var b=$('#flipBtn');if(b)b.setAttribute('aria-label','Flip card. Showing the '+(ui.flipped?'definition':'term')+'.');
+  $$('[data-act="rate"]').forEach(function(x){x.disabled=!ui.flipped});
+}
+function exportCSV(){
+  var cols=['title','skill','p','a','r','s','evidence','next','date','status','rehearsals'];
+  var q=function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'};
+  var csv=['Title','Competency','Problem','Action','Result','So what','Evidence','Next improvement','Next practice date','Status','Rehearsals'].map(q).join(',')+'\n'+S.stories.map(function(s){return cols.map(function(c){return q(s[c])}).join(',')}).join('\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='bridge-pars-stories.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+  toast('Exported your stories as a CSV file.');
+}
+var ACT={
+ more:function(){$('#sheet').hidden=false},
+ chart:function(b){ui.chart=b.dataset.v;$('#chartCard').innerHTML=chartCard()},
+ diff:function(b){ui.diff=b.dataset.v;paint()},
+ stage:function(b){ui.stage=+b.dataset.v;ui.hint=false;ui.sample=false;ui.fb='';paint()},
+ next:function(){ui.stage++;ui.hint=false;ui.sample=false;ui.fb='';paint();window.scrollTo(0,0)},
+ prev:function(){ui.stage--;ui.hint=false;ui.sample=false;ui.fb='';paint();window.scrollTo(0,0)},
+ hint:function(){ui.hint=!ui.hint;paint()},
+ sample:function(){ui.sample=!ui.sample;paint()},
+ checknum:function(){
+   var c=caseOf(ctx.arg),st=c.stages[ui.stage],v=parseFloat($('#num').value);
+   if(isNaN(v)){ui.fb='Enter a number first.';ui.fbc='warn'}
+   else if(Math.abs(v-st.answer)<=Math.abs(st.answer)*(st.tolerance||0.01)){ui.fb='Correct. That matches the expected answer of '+st.answer.toLocaleString()+'.';ui.fbc='good'}
+   else{ui.fb='Not quite. Re-check your math. Try the hint, then run the numbers again.';ui.fbc='warn'}
+   paint();
+ },
+ checkans:function(){
+   var c=caseOf(ctx.arg),st=c.stages[ui.stage],t=($('#note').value||'').toLowerCase();
+   if(words(t)<8){ui.fb='Write a few more sentences first, then check.';ui.fbc='warn';paint();return}
+   var terms=st.terms||[],hit=terms.filter(function(x){return t.indexOf(x.toLowerCase())>-1}),miss=terms.filter(function(x){return hit.indexOf(x)<0});
+   if(!terms.length){ui.fb='Saved. Compare your answer with the sample approach.';ui.fbc='good'}
+   else if(!miss.length){ui.fb='Strong. You covered all '+terms.length+' key ideas: '+hit.join(', ')+'.';ui.fbc='good'}
+   else{ui.fb='You covered '+hit.length+' of '+terms.length+' key ideas'+(hit.length?' ('+hit.join(', ')+')':'')+'. Consider adding: '+miss.join(', ')+'.';ui.fbc='warn'}
+   paint();
+ },
+ finish:function(){
+   if(S.caseDone[ctx.arg]){toast('You already finished this case.');return}
+   S.caseDone[ctx.arg]=today();ui.run=false;save();bump('Case complete.');paint();
+ },
+ timer:function(){ui.run=!ui.run;var b=$('#timerBtn');if(b)b.textContent=ui.run?'Pause':'Start'},
+ timerreset:function(){var c=caseOf(ctx.arg);ui.t=c.mins*60;ui.run=false;var e=$('#caseTimer');if(e)e.textContent=mmss(ui.t);var b=$('#timerBtn');if(b)b.textContent='Start'},
+ sf:function(b){ui.sf=b.dataset.v;paint()},
+ story:function(b){ui.sid=b.dataset.id;paint()},
+ newstory:function(){var id='s'+Date.now();S.stories.unshift({id:id,title:'Untitled story',skill:'Leadership',p:'',a:'',r:'',s:'',evidence:'',next:'',date:'',status:'Drafting',rehearsals:0});ui.sid=id;ui.sf='All';save();paint();var t=$('#f_title');if(t){t.focus();t.select()}},
+ delstory:function(b){
+   if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='Click again to delete';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.textContent='Delete story'}},3000);return}
+   S.stories=S.stories.filter(function(s){return s.id!==ui.sid});ui.sid='';save();paint();toast('Story deleted.');
+ },
+ rehearse:function(){var s=S.stories.filter(function(x){return x.id===ui.sid})[0];if(!s)return;s.rehearsals++;if(s.status==='Drafting'&&filled(s)===4)s.status='Needs practice';if(s.status==='Needs practice'&&s.rehearsals>=2&&filled(s)===4)s.status='Ready';save();bump('Rehearsal logged.');paint()},
+ export:exportCSV,
+ ipick:function(b){ui.qid=b.dataset.id;ui.icat='All';ui.isec=0;ui.irun=false;location.hash='#/interview/practice'},
+ itimer:function(){ui.irun=!ui.irun;var b=$('#iBtn');if(b)b.textContent=ui.irun?'Pause timer':'Start timer'},
+ inext:function(){var l=iqList(),i=l.map(function(q){return q.id}).indexOf(ui.qid);ui.qid=l[(i+1)%l.length].id;ui.isec=0;ui.irun=false;paint()},
+ isave:function(){
+   var t=S.drafts[ui.qid]||'';if(words(t)<20){toast('Write a little more first. Aim for about 120 words.');return}
+   var first=!S.saved[ui.qid];S.saved[ui.qid]=true;save();ui.irun=false;if(first)bump('Answer saved.');else toast('Answer updated.');paint();
+ },
+ flip:flipCard,
+ rate:function(b){rateCard(b.dataset.v)},
+ vtopic:function(b){ui.vtopic=b.dataset.v;buildDeck();paint()},
+ restart:function(){buildDeck();var st=$('#vstage'),pg=$('#vprog');st.innerHTML=cardHTML();pg.innerHTML=progHTML()},
+ resetvocab:function(){S.levels={};save();ui.deck=null;paint();toast('Vocab progress reset.')},
+ rsave:function(b){var id=b.dataset.id;S.res[id]=!S.res[id];save();paint()},
+ ropen:function(b){var r=RES.filter(function(x){return x.id===b.dataset.id})[0];if(r.url){window.open(r.url,'_blank','noopener')}else toast('Sample resource. Add its link in index.html to open it.')},
+ req:function(b){var id=b.dataset.id;S.req[id]=!S.req[id];save();toast(S.req[id]?'Intro requested.':'Request cancelled.');paint()},
+ join:function(b){var id=b.dataset.id;S.join[id]=!S.join[id];save();toast(S.join[id]?'You joined the group.':'You left the group.');paint()},
+ rsvp:function(b){var id=b.dataset.id;S.rsvp[id]=!S.rsvp[id];save();toast(S.rsvp[id]?'You are on the list.':'RSVP removed.');paint()}
+};
+document.addEventListener('click',function(e){
+  var sh=$('#sheet');
+  if(!sh.hidden&&(e.target===sh||e.target.closest('#sheetbox a'))){sh.hidden=true}
+  var b=e.target.closest('[data-act]');if(!b)return;
+  if(ACT[b.dataset.act])ACT[b.dataset.act](b,e);
+});
+function onInput(e){
+  var el=e.target,k=el.dataset&&el.dataset.in;
+  if(el.id==='nameInput'){S.name=el.value;save();$$('.js-name').forEach(function(x){x.textContent=S.name||'there'});$$('.js-av').forEach(function(x){x.textContent=(S.name||'U').charAt(0).toUpperCase()});return}
+  if(!k)return;
+  if(k==='q'){ui.q=el.value;paint('qCase')}
+  else if(k==='type'){ui.type=el.value;paint()}
+  else if(k==='iq'){ui.iq=el.value;paint('iqs')}
+  else if(k==='icat'){ui.icat=el.value;ui.qid='';ui.isec=0;paint()}
+  else if(k==='gq'){ui.gq=el.value;paint('gq')}
+  else if(k==='note'){var w=stageStore();w['n'+ui.stage]=el.value;if(el.value.trim()||Object.keys(w).length)save()}
+  else if(k==='num'){var w2=stageStore();w2['v'+ui.stage]=el.value;save()}
+  else if(k==='ans'){S.drafts[ui.qid]=el.value;save();var wc=$('#wc');if(wc)wc.textContent=words(el.value)+' words · aim for 120 to 200'}
+  else if(k==='sf'){
+    var s=S.stories.filter(function(x){return x.id===ui.sid})[0];if(!s)return;var f=el.dataset.f;
+    if(f==='status'&&el.value==='Ready'&&filled(s)<4){el.value=s.status;toast('Complete all four PARS sections before marking a story Ready.');return}
+    s[f]=el.value;save();updateStoryUI(s);
+    if(f==='title'){var lb=$('.listbtn.on b');if(lb)lb.textContent=el.value||'Untitled story'}
+  }
+}
+document.addEventListener('input',onInput);
+document.addEventListener('change',function(e){if(e.target.tagName==='SELECT')onInput(e)});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')$('#sheet').hidden=true;
+  if(ctx.sec==='vocab'&&ctx.sub==='cards'&&/^[123]$/.test(e.key)&&!/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||''))){
+    rateCard(['again','good','easy'][+e.key-1]);
+  }
+});
+
+route();
+})();
+</script>
+</body>
+</html>
